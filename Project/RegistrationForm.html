@@ -7,10 +7,64 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Rejestracja wizyty</h1>
+    <h1>Rejestracja użytkownika</h1>
     <form novalidate name="myForm" onsubmit="return validateForm()" method="post">
-        Name: <input type="text" name="fname" required>
-        <input type="submit" value="Submit">
+
+        <div>
+            <label for="fname">Imię:</label><br>
+            <input type="text" id="fname" name="fname" required placeholder="Twoje imię"><br>
+            <span id="fnameError" class="error-msg"></span>
+        </div>
+
+
+
+        <div>
+            <label for="lname">Nazwisko:</label><br>
+            <input type="text" id="lname" name="lname" required placeholder="Twoje nazwisko"><br>
+            <span id="lnameError" class="error-msg"></span>
+        </div>
+
+
+
+        <div>
+            <label for="bdate">Data urodzenia:</label><br>
+            <input type="date" id="bdate" name="bdate"><br>
+            <span id="bdateError" class="error-msg"></span>
+        </div>
+
+
+
+        <div>
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" name="email" required><br>
+            <span id="emailError" class="error-msg"></span>
+        </div>
+
+
+        <div>
+            <label for="phone">Telefon:</label><br>
+            <input type="text" id="phone" name="phone" required><br>
+            <span id="phoneError" class="error-msg"></span>
+        </div>
+
+
+        <div>
+            <label for="source">Skąd o nas usłyszałeś?</label><br>
+            <select id="source" name="source" required>
+                <option value="">-- Wybierz --</option>
+                <option value="sm">Media społecznościowe</option>
+                <option value="friend">Od znajomego</option>
+                <option value="ad">Reklama</option>
+                <option value="other">Inne</option>
+            </select>
+            <span id="sourceError" class="error-msg"></span>
+        </div>
+
+        <button type="submit">Zarejestruj się</button>
+        <span id="sumErr"></span>
+
     </form>
+
+
 </body>
 </html>
