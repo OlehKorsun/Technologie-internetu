@@ -47,21 +47,6 @@ header {
 
 
 
-
-
-/*nav {*/
-/*    background-color: #2C3E50;*/
-/*    padding: 20px;*/
-/*    height: 25px;*/
-/*    width: 100%;*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    z-index: 100;*/
-/*    color: #ECF0F1;*/
-/*}*/
-
-
 nav {
     display: flex;
     flex-wrap: wrap;
@@ -129,17 +114,6 @@ ul li::before{
     content: "✂";
 }
 
-
-/*.lists_container {*/
-/*    display: grid;*/
-/*    grid-template-columns: repeat(auto-fit, 400px);*/
-/*    gap: 10px;*/
-
-/*    margin-bottom: 30px;*/
-/*    margin-left: 100px;*/
-/*    margin-right: 100px;*/
-/*    background-color: #212F3D;*/
-/*}*/
 
 
 .lists_container {
@@ -228,5 +202,128 @@ footer a i:hover {
 
     nav, footer {
         display: none !important;
+    }
+}
+
+
+
+
+
+
+
+/* Rejestracja */
+
+.registration_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+    padding: 40px 20px;
+
+
+}
+
+.myForm {
+    background-color: #212F3D;
+    border: 2px solid #F39C12;
+    padding: 40px 50px;
+    border-radius: 15px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.4);
+    max-width: 900px;
+    width: 100%;
+    color: #ECF0F1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/*  układ pól */
+.form_row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 15px;
+}
+
+.form_group {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 250px;
+    min-width: 250px;
+}
+
+.form_group.full-width {
+    flex: 1 1 100%;
+}
+
+/*  inputy */
+
+input, select {
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-color: #2C3E50;
+    color: #ECF0F1;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #F39C12;
+    background-color: #34495E;
+    outline: none;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/*  błędy  */
+.error-msg {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 4px;
+}
+
+/*  przycisk */
+.form_action {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button[type="submit"] {
+    background-color: #F39C12;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 40px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #d68910;
+    transform: scale(1.05);
+}
+
+/*  responsywność  */
+@media (max-width: 800px) {
+    .form_row {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .form_group {
+        width: 100%;
+        min-width: unset;
+        margin-bottom: 5px;
+    }
+
+
+    .myForm{
+        gap: 5px;
     }
 }
