@@ -69,10 +69,10 @@ function validateForm(){
 
 
     // Walidacja pola Phone
-    const phonePattern = /\+ + [0-9]/;
-    if(phone.length < 10 || phone.length > 15 || phonePattern.test(phone)) {
+    const phonePattern = /^\+[0-9]{9,15}$/;
+    if(!phonePattern.test(phone)) {
         document.getElementById('phoneError').innerText = 'Podaj swój numer telefonu';
-        document.getElementById('phoneError').classList.add('error');
+        document.getElementById('phone').classList.add('error');
         errors.push('Pole Phone!');
     }
 
