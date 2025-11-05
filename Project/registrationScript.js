@@ -15,22 +15,22 @@ function validateForm(){
     // Walidacja pola Imię
     if(fname.length < 2) {
         document.getElementById('fnameError').innerText = 'Imię powinno zawierać co najmniej 2 znaki';
-        errors.push('Pole Imię!');
+        errors.push('Imię powinno zawierać co najmniej 2 znaki!');
     }
     if(fname.length > 60) {
         document.getElementById('fnameError').innerText = 'Imię nie może być dłuższe niż 60 znaków';
-        errors.push('Pole Imię!');
+        errors.push('Imię nie może być dłuższe niż 60 znaków!');
     }
 
 
     // Walidacja pola Nazwisko
     if(lname.length < 2) {
         document.getElementById('lnameError').innerText = 'Nazwisko powinno zawierać co najmniej 2 znaki';
-        errors.push('Pole Nazwisko!');
+        errors.push('Nazwisko powinno zawierać co najmniej 2 znaki!');
     }
     if(lname.length > 60) {
         document.getElementById('lnameError').innerText = 'Nazwisko nie może być dłuższe niż 60 znaków';
-        errors.push('Pole Nazwisko!');
+        errors.push('Nazwisko nie może być dłuższe niż 60 znaków!');
     }
 
 
@@ -48,32 +48,40 @@ function validateForm(){
         const realAge = age - dayAdjust;
 
         if(birthDate > today){
-            document.getElementById('bdateError').innerText = 'Wprowadź poprawną datę urodzenia!';
+            document.getElementById('bdateError').innerText = 'Data urodzenia nie może być późniejsza niż dzisiaj!';
             document.getElementById('bdate').classList.add('error');
-            errors.push('Pole Birthdate');
+            errors.push('Data urodzenia nie może być późniejsza niż dzisiaj!');
         } else if(realAge < 16){
             document.getElementById('bdateError').innerText = 'Musisz mieć co najmniej 16 lat!';
             document.getElementById('bdate').classList.add('error');
-            errors.push('Za młody!');
+            errors.push('Jesteś za młody, nie możesz się zarejestrować!');
         }
     }
 
 
     // Walidacja pola Email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailPattern.test(email)){
-        document.getElementById('emailError').innerText = 'Podaj swój email';
+    if(!email){
+        document.getElementById('emailError').innerText = 'Pole email jest wymagane!';
         document.getElementById('email').classList.add('error');
-        errors.push('Pole Email!');
+        errors.push('Pole email jest wymagane!');
+    } else if(!emailPattern.test(email)){
+        document.getElementById('emailError').innerText = 'Niepoprawny email!';
+        document.getElementById('email').classList.add('error');
+        errors.push('Podaj prawidłowy email!');
     }
 
 
     // Walidacja pola Phone
     const phonePattern = /^\+[0-9]{9,15}$/;
-    if(!phonePattern.test(phone)) {
-        document.getElementById('phoneError').innerText = 'Podaj swój numer telefonu';
+    if(!phone){
+        document.getElementById('phoneError').innerText = 'Pole number jest wymagane!';
         document.getElementById('phone').classList.add('error');
-        errors.push('Pole Phone!');
+        errors.push('Pole number jest wymagane!');
+    } else if(!phonePattern.test(phone)) {
+        document.getElementById('phoneError').innerText = 'Niepoprawny numer! Musi zaczynać się od + i mieć 9-15 cyfr';
+        document.getElementById('phone').classList.add('error');
+        errors.push('Niepoprawny numer!');
     }
 
 
@@ -81,19 +89,17 @@ function validateForm(){
     if(source===''){
         document.getElementById('sourceError').innerText = 'Wybierz jedną z opcji';
         document.getElementById('source').classList.add('error');
-        errors.push('Pole Źródło');
+        errors.push('Pole źródło jest wymagane!');
     }
 
 
     if(errors.length > 0){
-        console.log("Są jakieś błędy!" + errors.join("\n"));
-        document.getElementById('sumErr').innerText = 'Do poprawy następujące błędy: ' + errors.join(' ');
+        // console.log("Są jakieś błędy!" + errors.join("\n"));
+        document.getElementById('sumErr').innerText = 'Do poprawy następujące błędy:\n* ' + errors.join('\n * ');
         return false;
     }
 
-    console.log('Wszysko dobrze!')
+    // console.log('Wszysko dobrze!')
     alert("Dane zapisane. Dziękujemy za rejestrację!")
     return true;
-
-
 }
