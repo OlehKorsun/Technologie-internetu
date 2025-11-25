@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="styles.css">
     <meta charset="UTF-8">
@@ -7,19 +7,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <script src="menu.js" defer></script>
+    <script src="top_button.js" defer></script>
 </head>
 <body>
-    <header>
-        <div id="placeForNavbar"></div>
+
+<div id="placeForNavbar"></div>
+
+<header>
+    <div class="header-content">
+        <img class="barbershop_image" src="https://media.istockphoto.com/id/1446474893/pl/wektor/wektor-logo-fryzjera-logo-salonu.jpg?s=612x612&w=0&k=20&c=OML_vJejkr1PK-iGHKyPqkhCVNYSywBSPzXBqB1iMWo=" alt="Logo barbershop">
         <h1>Barbershop „Broda i Wąsy”</h1>
-    </header>
+        <img class="barbershop_image" src="https://media.istockphoto.com/id/1446474893/pl/wektor/wektor-logo-fryzjera-logo-salonu.jpg?s=612x612&w=0&k=20&c=OML_vJejkr1PK-iGHKyPqkhCVNYSywBSPzXBqB1iMWo=" alt="Logo barbershop">
+    </div>
+</header>
 
 
     <main>
 
         <article>
 
-            <img class="barbershop_image" src="https://media.istockphoto.com/id/1446474893/pl/wektor/wektor-logo-fryzjera-logo-salonu.jpg?s=612x612&w=0&k=20&c=OML_vJejkr1PK-iGHKyPqkhCVNYSywBSPzXBqB1iMWo=" alt="Logo barbershop">
             <h2>O naszym barbershopie</h2>
 
             <p>
@@ -41,61 +47,44 @@
         </article>
 
 
-        <div class="lists_container">
-            <article>
-                <h2>Hyrykowicz Jan</h2>
-                <p>Lista usług</p>
-                <ul>
-                    <li>Strzyżenie</li>
-                    <li>Golenie</li>
-                    <li>Tuszowanie</li>
-                </ul>
-                <p>Główne zainteresowania</p>
-                <ol>
-                    <li>Polowanie</li>
-                    <li>Broń palna</li>
-                    <li>Motocykle</li>
-                </ol>
-            </article>
+        <article>
+            <h2>Galeria</h2>
+            <div class="gallery">
+                <img src="src/image1.jpg" alt="Strzyżenie 1">
+                <img src="src/image2.jpg" alt="Strzyżenie 2">
+                <img src="src/image3.jpg" alt="Zarost 1">
+                <img src="src/image4.jpg" alt="Zarost 2">
+                <img src="src/image5.jpg" alt="Wnętrze barbershopu">
+                <img src="src/image6.jpg" alt="Przed/Po strzyżenie">
+            </div>
+        </article>
 
-            <article>
-                <h2>Adam Nowak</h2>
-                <p>Lista usług</p>
-                <ul>
-                    <li>Strzyżenie</li>
-                    <li>Golenie</li>
-                    <li>Stylizacja brody i wąsów</li>
-                </ul>
-                <p>Główne zainteresowania</p>
-                <ol>
-                    <li>Motocykle i customowe maszyny</li>
-                    <li>Historia fryzjerstwa i tradycyjne techniki</li>
-                    <li>Kolekcjonowanie winyli i muzyka lat 70</li>
-                </ol>
-            </article>
 
-            <article>
-                <h2>Krzysztof Goned</h2>
-                <p>Lista usług</p>
-                <ul>
-                    <li>Strzyżenie</li>
-                    <li>Golenie</li>
-                    <li>Koloryzacja i balejaż</li>
-                </ul>
-                <p>Główne zainteresowania</p>
-                <ol>
-                    <li>Street art oraz graffiti</li>
-                    <li>Sporty ekstremalne (skateboarding, BMX)</li>
-                    <li>Gotowanie i kulinarne eksperymenty</li>
-                </ol>
-            </article>
-        </div>
+
+        <article>
+            <h2>Opinie naszych klientów</h2>
+            <div class="testimonials">
+                <div class="testimonial">
+                    <p>"Świetna obsługa! Strzyżenie idealne, a atmosfera w barbershopie niesamowita. Zdecydowanie polecam!"</p>
+                    <h3>- Michał</h3>
+                </div>
+                <div class="testimonial">
+                    <p>"Bardzo profesjonalne podejście, fajna atmosfera. Na pewno wrócę!"</p>
+                    <h3>- Krzysztof</h3>
+                </div>
+                <div class="testimonial">
+                    <p>"Wszystko na najwyższym poziomie, po wizycie czułem się świetnie!"</p>
+                    <h3>- Tomasz</h3>
+                </div>
+            </div>
+        </article>
+
+
 
 
         <article>
             <h2>Cennik</h2>
             <table>
-                <caption>Hyrykowicz Jan</caption>
                 <thead>
                 <tr>
                     <th>Usługa</th>
@@ -106,38 +95,46 @@
                 <tbody>
                 <tr>
                     <td>Strzyżenie</td>
-                    <td>100</td>
-                    <td>45</td>
+                    <td>100 PLN</td>
+                    <td>45 min</td>
                 </tr>
                 <tr>
-                    <td>Strzyrzenie + Golenie</td>
-                    <td>150</td>
-                    <td>75</td>
+                    <td>Strzyżenie + Golenie</td>
+                    <td>150 PLN</td>
+                    <td>75 min</td>
                 </tr>
                 <tr>
                     <td>Golenie</td>
-                    <td>75</td>
-                    <td>30</td>
+                    <td>75 PLN</td>
+                    <td>30 min</td>
                 </tr>
                 <tr>
                     <td>Tuszowanie brody</td>
-                    <td>85</td>
-                    <td>30</td>
+                    <td>85 PLN</td>
+                    <td>30 min</td>
                 </tr>
                 <tr>
                     <td>Tuszowanie włosów</td>
-                    <td>90</td>
-                    <td>40</td>
+                    <td>90 PLN</td>
+                    <td>40 min</td>
                 </tr>
                 </tbody>
             </table>
         </article>
 
+
+
+        <article>
+            <h2>Nasza lokalizacja</h2>
+            <div id="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2235.5531826410456!2d20.975121633496684!3d52.25692517788233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecb001faa7a1b%3A0x7b486793a9c32ed8!2sWESTBIL%20BARBERSHOP!5e1!3m2!1sru!2spl!4v1764000679223!5m2!1sru!2spl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </article>
+
+
     </main>
 
-
         <div id="placeForFooter"></div>
-
 
     <button class="scrollTopBtn" title="Wróć na górę">
         ↑

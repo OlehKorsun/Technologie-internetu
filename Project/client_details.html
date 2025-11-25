@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Szczegóły Klienta</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="menu.js" defer></script>
+  <script src="top_button.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div id="placeForNavbar"></div>
+
+<header>
+  <h1>Szczegóły Klienta - Kamil Nowak</h1>
+</header>
+
+<main>
+  <div class="details-card">
+    <div class="details-row"><strong>Imię i Nazwisko:</strong> Kamil Nowak</div>
+    <div class="details-row"><strong>Data Urodzenia:</strong> 1990-05-15</div>
+    <div class="details-row"><strong>Email:</strong> kamil.nowak@example.com</div>
+    <div class="details-row"><strong>Telefon:</strong> +48123456789</div>
+    <div class="details-row"><strong>Liczba wizyt:</strong> 8</div>
+  </div>
+
+  <h2>Wizyty</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Data</th>
+      <th>Barber</th>
+      <th>Usługa</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>2025-11-10</td>
+      <td>Adam Kowalski</td>
+      <td>Strzyżenie</td>
+      <td>Odbyta</td>
+    </tr>
+    <tr>
+      <td>2025-11-12</td>
+      <td>Jakub Nowak</td>
+      <td>Strzyżenie + Golenie</td>
+      <td>Odbyta</td>
+    </tr>
+    <tr>
+      <td>2025-11-15</td>
+      <td>Michał Wójcik</td>
+      <td>Golenie</td>
+      <td>Odbyta</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="btm-bottom">
+    <a href="#" class="btn btn-edit">Edytuj Klienta</a>
+    <a href="#" class="btn btn-delete">Usuń Klienta</a>
+  </div>
+</main>
+
+<div id="placeForFooter"></div>
+</body>
+</html>

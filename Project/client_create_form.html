@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Dodaj Klienta</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="menu.js" defer></script>
+  <script src="top_button.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div id="placeForNavbar"></div>
+
+<header>
+  <h1>Dodaj Klienta</h1>
+</header>
+
+<main class="registration_container">
+  <form method="post">
+
+    <div class="form_row">
+      <div class="form_group">
+        <label for="firstName">Imię:</label>
+        <input type="text" id="firstName" name="firstName" required placeholder="Imię klienta">
+      </div>
+
+      <div class="form_group">
+        <label for="lastName">Nazwisko:</label>
+        <input type="text" id="lastName" name="lastName" required placeholder="Nazwisko klienta">
+      </div>
+
+      <div class="form_group">
+        <label for="birthDate">Data urodzenia:</label>
+        <input type="date" id="birthDate" name="birthDate">
+      </div>
+    </div>
+
+    <div class="form_row">
+      <div class="form_group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="przyklad@gmail.com">
+      </div>
+
+      <div class="form_group">
+        <label for="phone">Telefon:</label>
+        <input type="tel" id="phone" name="phone" required placeholder="+1234567890">
+      </div>
+    </div>
+
+    <div class="form_action">
+      <button type="submit">Dodaj Klienta</button>
+    </div>
+
+  </form>
+</main>
+
+<div id="placeForFooter"></div>
+</body>
+</html>

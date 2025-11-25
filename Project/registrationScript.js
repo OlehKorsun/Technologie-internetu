@@ -94,12 +94,10 @@ function validateForm(){
 
 
     if(errors.length > 0){
-        // console.log("Są jakieś błędy!" + errors.join("\n"));
         document.getElementById('sumErr').innerText = 'Do poprawy następujące błędy:\n* ' + errors.join('\n * ');
         return false;
     }
-
-    // console.log('Wszysko dobrze!')
+    
     alert("Dane zapisane. Dziękujemy za rejestrację!")
     return true;
 }

@@ -1,29 +1,90 @@
-table, th, td {
-    border: 1px solid white;
-    border-collapse: collapse;
-    padding: 5px;
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-spacing: 5px;
 }
 
-
-table tr:hover {
-    background-color: #f39c121a;
+th {
+    background-color: #2C3E50;
     color: white;
+    padding: 15px 10px;
+    font-size: 1.2em;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+td {
+    background-color: #34495E;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    border-bottom: 1px solid #2C3E50;
+    font-size: 1.1em;
+    border-left: 1px solid #2C3E50;
+    border-right: 1px solid #2C3E50;
 }
 
 
+td:hover {
+    background-color: inherit;
+    color: inherit;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+th:first-child {
+    border-top-left-radius: 10px;
+}
+th:last-child {
+    border-top-right-radius: 10px;
+}
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+table th:last-child,
+table td:last-child {
+    width: 550px;
+    white-space: nowrap;
+}
+
+table td:first-child {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table td:first-child {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btm-bottom {
+    text-align: center;
+    margin-top: 20px;
+}
 
 article {
-    margin-left: 100px;
-    margin-right: 100px;
-    padding-bottom: 30px;
-    padding-top: 3px;
-    padding-left: 15px;
+    margin: 0 75px 25px;
+    padding: 15px 15px 30px;
     background-color: #212F3D;
-    margin-bottom: 25px;
     color: #ECF0F1;
+    text-align: center;
 }
 
-
+article h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
 
 body {
     display: flex;
@@ -38,14 +99,34 @@ body h2{
     font-family: "Oswald", sans-serif;
 }
 
-
 header {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 75%;
+    margin: 0 auto;
+}
 
+.barbershop_image {
+    max-width: 15%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px darkgrey;
+}
 
-
+header h1 {
+    margin: 0 auto;
+    text-align: center;
+    font-family: "Impact", sans-serif;
+}
 
 nav {
     display: flex;
@@ -57,8 +138,6 @@ nav {
     background-color: #2C3E50;
     padding: 10px;
 }
-
-
 
 nav a {
     flex-grow: 0;
@@ -74,8 +153,6 @@ nav a {
     font-family: "Oswald", sans-serif;
 }
 
-
-
 nav a:hover, nav a.active {
     color: #F39C12;
 
@@ -84,36 +161,13 @@ nav a:hover, nav a.active {
 }
 
 
-
-header h1 {
-    margin-top: 15px;
-    font-family: "Impact", sans-serif;
-}
-
-
-
-.barbershop_image {
-    float: right;
-    max-width: 50%;
-    border: 3px solid black;
-    margin: 5px 10px 5px 10px;
-    border-radius: 15px;
-    box-shadow: 5px 5px 15px darkgrey;
-    /*vertical-align: middle;*/
-}
-
-
-
 ul {
     list-style-type: none;
 }
 
-
-
 ul li::before{
     content: "✂";
 }
-
 
 
 .lists_container {
@@ -131,8 +185,6 @@ ul li::before{
     border-radius: 10px;
     box-shadow: 0 4px 6px #f39c121a;
 }
-
-
 
 footer {
     text-align: center;
@@ -160,14 +212,12 @@ footer a i:hover {
     color: #F39C12;
 }
 
-
-
 .scrollTopBtn {
     width: 60px;
     height: 60px;
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    right: 15px;
     z-index: 100;
     background-color: #212F3D;
     color: white;
@@ -176,19 +226,17 @@ footer a i:hover {
     border-radius: 50%;
     font-size: 30px;
     cursor: pointer;
-    opacity: 0.5;
-    transition: all 0.3s ease;
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.3s;
 }
 
 .scrollTopBtn:hover {
     opacity: 1;
     color: #F39C12;
+    transform: scale(1.1);
     background-color: #f39c121a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-
-
-
-
 
 @media print {
     body {
@@ -206,21 +254,12 @@ footer a i:hover {
 }
 
 
-
-
-
-
-
-/* Rejestracja */
-
 .registration_container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 150px);
     padding: 40px 20px;
-
-
 }
 
 .myForm {
@@ -237,7 +276,6 @@ footer a i:hover {
     gap: 25px;
 }
 
-/*  układ pól */
 .form_row {
     display: flex;
     flex-wrap: wrap;
@@ -256,8 +294,6 @@ footer a i:hover {
 .form_group.full-width {
     flex: 1 1 100%;
 }
-
-/*  inputy */
 
 input, select {
     padding: 12px;
@@ -279,14 +315,12 @@ label {
     font-weight: bold;
 }
 
-/*  błędy  */
 .error-msg {
     color: #e74c3c;
     font-size: 0.9em;
     margin-top: 4px;
 }
 
-/*  przycisk */
 .form_action {
     text-align: center;
     margin-top: 20px;
@@ -308,7 +342,6 @@ button[type="submit"]:hover {
     transform: scale(1.05);
 }
 
-/*  responsywność  */
 @media (max-width: 800px) {
     .form_row {
         flex-direction: column;
@@ -326,4 +359,140 @@ button[type="submit"]:hover {
     .myForm{
         gap: 5px;
     }
+
+    article {
+        margin: 0 25px 10px;
+    }
+}
+
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery img:hover {
+    transform: scale(1.05);
+}
+
+
+#map-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#map-container iframe {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+
+.testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.testimonial {
+    background-color: #f9f9f9;
+    border-left: 5px solid #4CAF50;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.testimonial h3 {
+    font-style: italic;
+    text-align: right;
+    color: #333;
+}
+
+.testimonial p {
+    font-style: italic;
+    text-align: left;
+    color: #333;
+}
+
+
+.btn {
+    display: inline-block;
+    padding: 10px 25px;
+    border-radius: 25px;
+    border: 2px solid #ECF0F1;
+    background-color: transparent;
+    color: #ECF0F1;
+    font-family: "Oswald", sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 3px;
+}
+
+.btn:hover {
+    background-color: #f39c121a;
+    color: #F39C12;
+    border-color: #F39C12;
+}
+
+.btn-add {
+    border-color: #27ae60;
+}
+.btn-add:hover {
+    border-color: #2ecc71;
+    color: #2ecc71;
+}
+
+.btn-edit {
+    border-color: #F39C12;
+}
+.btn-edit:hover {
+    color: #F39C12;
+}
+
+.btn-delete {
+    border-color: #e74c3c;
+}
+.btn-delete:hover {
+    color: #e74c3c;
+    background-color: #632620;
+}
+
+
+.details-card {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px 30px;
+    background-color: #212F3D;
+    color: #ECF0F1;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.details-row {
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.details-card strong {
+    display: inline-block;
+    width: 150px;
+    font-weight: bold;
+}
+
+main h2 {
+    text-align: center;
+    margin: 0 auto;
 }
