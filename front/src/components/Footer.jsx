@@ -1,0 +1,12 @@
+export default function Footer(){
+    return (
+        <footer>
+            <p>Author: Oleh Korsun</p>
+            <p><a href="mailto:nonexisting@gmail.com">Write to me!</a></p>
+            <p>Obserwuj nas:</p>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer"><i className="fab fa-facebook"></i></a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer"><i className="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer"><i className="fab fa-linkedin"></i></a>
+            <p>&copy; 2025 Oleh Korsun. Wszelkie prawa zastrzeżone.</p>
+        </footer>);
+}
