@@ -1,5 +1,6 @@
 import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {apiFetch} from "../api/api";
 
 export default function BarberDetails(){
     const {id} = useParams();
@@ -10,13 +11,14 @@ export default function BarberDetails(){
     useEffect(() => {
         const loadBarbers = async () => {
             try{
-                const response = await fetch(`http://localhost:5058/api/barbers/${id}`);
+                const response = await apiFetch(`http://localhost:5058/api/barbers/${id}`);
 
                 if(response.status === 404){
                     setBarber(null);
                 } else{
                     const data = await response.json();
                     setBarber(data);
+                    // setBarber(response)
                 }
             } catch (err){
                 setBarber(null);
@@ -31,13 +33,14 @@ export default function BarberDetails(){
     useEffect(() => {
         const loadVisits = async () => {
             try{
-                const response = await fetch(`http://localhost:5058/api/visits/barber/${id}`);
+                const response = await apiFetch(`http://localhost:5058/api/visits/barber/${id}`);
 
                 if(response.status === 404){
                     setVisits([]);
                 } else {
                     const data = await response.json();
                     setVisits(data);
+                    // setVisits(response)
                 }
             } catch (err){
                 setVisits(null);

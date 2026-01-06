@@ -11,25 +11,27 @@ export default function Navbar(){
                 Strona główna
             </NavLink>
 
-            <NavLink
-                to="/clients"
-                className={({ isActive }) => isActive ? "active" : ""}>
-                Klienci
-            </NavLink>
+            {user && user.role === "user" && (
+                <>
+                    <NavLink to="/visits" className={({ isActive }) => isActive ? "active" : ""}>Moje wizyty</NavLink>
+                    <NavLink to="/profile" className={({ isActive }) => isActive ? "active" : ""}>Moje dane</NavLink>
+                </>
+            )}
 
-            <NavLink
-            to="/barbers"
-            className={({ isActive }) => isActive ? "active" : ""}>
-                Barberzy
-            </NavLink>
+            {user && user.role === "admin" && (
+                <>
+                    <NavLink to="/clients" className={({ isActive }) => isActive ? "active" : ""}>Klienci</NavLink>
+                    <NavLink to="/barbers" className={({ isActive }) => isActive ? "active" : ""}>Barberzy</NavLink>
+                    <NavLink to="/visits" className={({ isActive }) => isActive ? "active" : ""}>Wszystkie wizyty</NavLink>
+                </>
+            )}
 
-            <NavLink
-            to="/visits"
-            className={({ isActive }) => isActive ? "active" : ""}>
-                Wizyty
-            </NavLink>
-
-            {!user && <NavLink to="/login">Login</NavLink>}
+            {!user && (
+                <>
+                    <NavLink to="/login" className={({ isActive }) => isActive ? "active" : ""}>Zaloguj się</NavLink>
+                    <NavLink to="/register" className={({ isActive }) => isActive ? "active" : ""}>Zarejestruj się</NavLink>
+                </>
+            )}
 
             {user && (
                 <>

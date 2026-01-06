@@ -1,5 +1,6 @@
 import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {apiFetch} from "../api/api";
 
 export default function VisitDetails() {
     const {id} = useParams();
@@ -9,13 +10,14 @@ export default function VisitDetails() {
     useEffect(() =>{
         const loadVisits = async () => {
             try{
-                const response = await fetch(`http://localhost:5058/api/visits/${id}`);
+                const response = await apiFetch(`http://localhost:5058/api/visits/${id}`);
 
                 if(response.status === 404){
                     setVisit(null);
                 } else {
                     const data = await response.json();
                     setVisit(data);
+                    // setVisit(response)
                 }
             } catch (err) {
                 setVisit(null);

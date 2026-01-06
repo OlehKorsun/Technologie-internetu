@@ -7,6 +7,7 @@ export default function BarbersPage() {
 
     useEffect(() => {
         apiFetch("http://localhost:5058/api/barbers")
+            .then(res => res.json())
             .then(data => setBarbers(data))
         .catch(err => {
             console.error(err);

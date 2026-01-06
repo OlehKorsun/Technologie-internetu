@@ -48,6 +48,15 @@ public class VisitsController : ControllerBase
         return Ok(visits);
     }
 
+
+    [Authorize(Roles = "admin,user")]
+    [HttpGet("user/{userId}")]
+    public async Task<IActionResult> GetVisitsByUserId([FromRoute] int userId)
+    {
+        var visits = await _visitService.GetVisitsByUserId(userId);
+        return Ok(visits);
+    }
+
     [HttpPost]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateVisit([FromBody]VisitRequest visitRequest)

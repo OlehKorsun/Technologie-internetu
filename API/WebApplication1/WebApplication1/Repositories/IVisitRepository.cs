@@ -17,5 +17,6 @@ public interface IVisitRepository
         DateTime start,
         DateTime end,
         int? excludedVisitId = null);
+    Task<IEnumerable<Visit>> GetVisitsByUserId(int clientId);
 
 }

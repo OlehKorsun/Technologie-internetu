@@ -51,6 +51,16 @@ public class VisitRepository : IVisitRepository
         return visits;
     }
 
+    public async Task<IEnumerable<Visit>> GetVisitsByUserId(int userId)
+    {
+        var visits = await _context.Visits
+            .Include(c => c.Client)
+            .Include(b => b.Barber)
+            .Where(v => v.Client.UserId == userId)
+            .ToListAsync();
+        return visits;
+    }
+
     public async Task AddVisitAsync(Visit visit)
     {
         _context.Visits.Add(visit);

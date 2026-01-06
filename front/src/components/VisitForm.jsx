@@ -1,5 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import {apiFetch} from "../api/api";
 
 export default function VisitForm() {
 
@@ -20,16 +21,16 @@ export default function VisitForm() {
     });
 
     useEffect(() => {
-        fetch("http://localhost:5058/api/clients")
+        apiFetch("http://localhost:5058/api/clients")
             .then((res) => res.json())
             .then(setClients);
 
-        fetch("http://localhost:5058/api/barbers")
+        apiFetch("http://localhost:5058/api/barbers")
             .then((res) => res.json())
             .then(setBarbers);
 
         if (isEdit) {
-            fetch(`http://localhost:5058/api/visits/${id}`)
+            apiFetch(`http://localhost:5058/api/visits/${id}`)
                 .then(async res => {
                     if (!res.ok) {
                         const text = await res.text();
@@ -67,7 +68,7 @@ export default function VisitForm() {
 
         const method = isEdit ? "PUT" : "POST";
 
-        const res = await fetch(url, {
+        const res = await apiFetch(url, {
             method,
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(form)

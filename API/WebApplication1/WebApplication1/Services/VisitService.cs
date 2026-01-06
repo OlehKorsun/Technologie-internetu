@@ -88,6 +88,20 @@ public class VisitService : IVisitService
         });
     }
 
+    public async Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId)
+    {
+        var visits = await _visitRepository.GetVisitsByUserId(userId);
+        return visits.Select(v => new VisitDto()
+        {
+            VisitId = v.VisitId,
+            BarberName = v.Barber.Name,
+            ClientName = v.Client.Name,
+            Start = v.Start,
+            End = v.End,
+            Price = v.Price
+        });
+    }
+
     public async Task<VisitDto> CreateVisit(VisitRequest visitRequest)        // Sprawdzić czy dobrze zrobione, czy wstawiać id czy obiekt
     {
         if (visitRequest == null)

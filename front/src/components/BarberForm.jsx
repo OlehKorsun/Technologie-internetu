@@ -80,6 +80,7 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {apiFetch} from "../api/api";
 
 export default function BarberForm() {
     const { id } = useParams();
@@ -98,13 +99,14 @@ export default function BarberForm() {
     useEffect(() => {
         if (!isEdit) return;
 
-        fetch(`http://localhost:5058/api/barbers/${id}`)
+        apiFetch(`http://localhost:5058/api/barbers/${id}`)
             .then(async res => {
                 if (!res.ok) {
                     const msg = await res.text();
                     throw new Error(msg);
                 }
                 return res.json();
+                // return res;
             })
             .then(data => {
                 setForm({
@@ -135,7 +137,7 @@ export default function BarberForm() {
         const method = isEdit ? "PUT" : "POST";
 
         try {
-            const res = await fetch(url, {
+            const res = await apiFetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)

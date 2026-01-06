@@ -1,90 +1,6 @@
-// import {useState} from "react";
-//
-// export default function ClientForm({onClientAdded}) {
-//     const [name, setName] = useState("");
-//     const [surname, setSurname] = useState("");
-//     const [birthdate, setBirthdate] = useState("");
-//
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//
-//         const newClient = {
-//             name,
-//             surname,
-//             birthdate,
-//         };
-//
-//
-//         try{
-//             const response = await fetch("http://localhost:5058/api/clients", {
-//                 method: "POST",
-//                 headers: {"Content-Type": "application/json"},
-//                 body: JSON.stringify(newClient),
-//             });
-//
-//             if(!response.ok) {
-//                 alert(await response.text());
-//                 return;
-//
-//             }
-//             alert("Klient dodany!");
-//             setName("");
-//             setSurname("");
-//             setBirthdate("");
-//             if(onClientAdded) onClientAdded();
-//         } catch (err){
-//             alert("Błąd!");
-//         }
-//     };
-//
-//
-//     return (
-//         <article className="registration_container">
-//             <form onSubmit={handleSubmit}>
-//                 <h2>Dodaj klienta</h2>
-//
-//                 <div className="form_row">
-//                     <div className="form_group">
-//                         <label>Imię</label>
-//                         <input
-//                             type="text"
-//                             value={name}
-//                             onChange={e => setName(e.target.value)}
-//                         />
-//                     </div>
-//
-//                     <div className="form_group">
-//                         <label>Nazwisko</label>
-//                         <input
-//                             type="text"
-//                             value={surname}
-//                             onChange={e => setSurname(e.target.value)}
-//                         />
-//                     </div>
-//
-//                     <div className="form_group">
-//                         <label>Data urodzenia</label>
-//                         <input
-//                             type="date"
-//                             value={birthdate}
-//                             onChange={e => setBirthdate(e.target.value)}
-//                         />
-//                     </div>
-//                 </div>
-//
-//                 <div className="form_action">
-//                     <button type="submit">Dodaj</button>
-//                 </div>
-//             </form>
-//         </article>
-//     );
-//
-// }
-
-
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {apiFetch} from "../api/api";
 
 export default function ClientForm() {
     const { id } = useParams();
@@ -103,13 +19,14 @@ export default function ClientForm() {
     useEffect(() => {
         if (!isEdit) return;
 
-        fetch(`http://localhost:5058/api/clients/${id}`)
+        apiFetch(`http://localhost:5058/api/clients/${id}`)
             .then(async res => {
                 if (!res.ok) {
                     const msg = await res.text();
                     throw new Error(msg);
                 }
                 return res.json();
+                // return res;
             })
             .then(data => {
                 setForm({
@@ -139,17 +56,13 @@ export default function ClientForm() {
 
         const method = isEdit ? "PUT" : "POST";
 
+
         try {
-            const res = await fetch(url, {
+            const data = await apiFetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
             });
-
-            if (!res.ok) {
-                const message = await res.text();
-                throw new Error(message || "Błąd zapisu danych");
-            }
 
             navigate("/clients");
         } catch (err) {
@@ -157,6 +70,8 @@ export default function ClientForm() {
         } finally {
             setLoading(false);
         }
+
+
     };
 
     const today = new Date();

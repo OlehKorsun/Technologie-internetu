@@ -25,8 +25,6 @@ public class AuthService : IAuthServise
     
     public async Task<String> LoginAsync(LoginRequest request)
     {
-        Console.WriteLine(request.Login);
-        Console.WriteLine(request.Password);
         var user = await _userRepository.GetUserByLoginAsync(request.Login);
 
         if (user == null)
@@ -35,7 +33,6 @@ public class AuthService : IAuthServise
         }
 
         var hash = ComputeHash(request.Password + user.Salt);
-        Console.WriteLine($"Hash: ${hash}");
         if (user.Password != hash)
         {
             throw new UnauthorizedAccessException("Invalid password.");
@@ -81,8 +78,9 @@ public class AuthService : IAuthServise
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Login),
-            new Claim(ClaimTypes.Role, user.IdRolaNavigation.Title)
+            new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+            new Claim(ClaimTypes.Name, user.Login),
+            new Claim(ClaimTypes.Role, user.IdRolaNavigation.Title),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

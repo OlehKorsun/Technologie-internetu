@@ -13,4 +13,5 @@ public interface IVisitService
     Task<VisitDto> CreateVisit(VisitRequest visitRequest);
     Task UpdateVisit(int visitId, VisitRequest visitRequest);
     Task DeleteVisit(int visitId);
+    Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId);
 }

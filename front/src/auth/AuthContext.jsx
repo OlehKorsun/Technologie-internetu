@@ -4,10 +4,6 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(
-        localStorage.getItem("token") || ""
-    );
-
 
     const parseJwt = (token) => {
         try {
@@ -20,46 +16,33 @@ export function AuthProvider({ children }) {
                     .join('')
             );
             return JSON.parse(jsonPayload);
-        } catch (e) {
+        } catch {
             return null;
         }
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            const decoded = parseJwt(token);
-            if (decoded) {
-                setUser({
-                    login: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
-                    role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
-                    token
-                });
-            }
-        }
-    }, []);
+    const loadUserFromToken = (token) => {
+        const decoded = parseJwt(token);
+        if (!decoded) return;
 
-    // useEffect(() => {
-    //     if (!token) {return}
-    //
-    //     const payload = JSON.parse(atob(token.split('.')[1]));
-    //
-    //     setUser({
-    //         login: payload.unique_name,
-    //         role: payload.role,
-    //     });
-    // }, [token]);
+        console.log("Decoded token:", decoded);
+
+        setUser({
+            id: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+            login: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+            role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+            token
+        });
+    };
+
+    useEffect(() => {
+        const savedToken = localStorage.getItem("token");
+        if (savedToken) loadUserFromToken(savedToken);
+    }, []);
 
     const login = (token) => {
         localStorage.setItem("token", token);
-        const decoded = parseJwt(token);
-        if (decoded) {
-            setUser({
-                login: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
-                role: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
-                token
-            });
-        }
+        loadUserFromToken(token);
     };
 
     const logout = () => {
@@ -68,7 +51,7 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

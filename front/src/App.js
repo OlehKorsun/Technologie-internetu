@@ -17,6 +17,8 @@ import VisitForm from "./components/VisitForm";
 import PrivateRoute from "./auth/PrivateRoute";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import Forbidden from "./pages/Forbidden";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
     return (
@@ -39,7 +41,7 @@ function App() {
                     </PrivateRoute>
                 }/>
                 <Route path="/visits" element={
-                    <PrivateRoute roles={["admin"]}>
+                    <PrivateRoute roles={["admin", "user"]}>
                         <VisitsPage/>
                     </PrivateRoute>}/>
 
@@ -48,16 +50,30 @@ function App() {
                     <PrivateRoute roles={["admin"]}>
                         <BarberDetails/>
                     </PrivateRoute>}/>
+
                 <Route path="/visit/:id" element={<VisitDetails/>}/>
 
                 <Route path="/client/add" element={<ClientForm/>}/>
                 <Route path="/client/edit/:id" element={<ClientForm/>}/>
 
-                <Route path="/barber/add" element={<BarberForm/>}/>
-                <Route path="/barber/edit/:id" element={<BarberForm/>}/>
+                <Route path="/barber/add" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <BarberForm/>
+                    </PrivateRoute>}/>
+                <Route path="/barber/edit/:id" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <BarberForm/>
+                    </PrivateRoute>}/>
 
                 <Route path="/visit/add" element={<VisitForm/>}/>
                 <Route path="/visit/edit/:id" element={<VisitForm/>}/>
+
+                <Route path="/profile" element={
+                    <PrivateRoute roles={["user"]}>
+                        <ProfilePage/>
+                    </PrivateRoute>}/>
+
+                <Route path="/forbidden" element={<Forbidden/>}/>
 
                 <Route path="*" element={<NotFound/>}/>
             </Routes>

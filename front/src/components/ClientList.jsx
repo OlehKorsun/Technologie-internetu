@@ -11,9 +11,6 @@ export default function ClientList({ clients, onDelete }) {
             <div className="table-header">
                 <h2>Lista klientów</h2>
 
-                {/*<Link to="/add" className="btn btn-add">*/}
-                {/*    Dodaj klienta*/}
-                {/*</Link>*/}
             </div>
 
             <table>

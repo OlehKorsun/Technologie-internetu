@@ -1,4 +1,5 @@
 export async function apiFetch(url, options = {}) {
+
     const token = localStorage.getItem("token");
 
     const response = await fetch(url, {
@@ -10,7 +11,6 @@ export async function apiFetch(url, options = {}) {
         }
     });
 
-    // Obsługa błędów
     if (response.status === 401) {
         localStorage.removeItem("token");
         window.location.href = "/login";
@@ -22,15 +22,14 @@ export async function apiFetch(url, options = {}) {
         throw new Error("Forbidden");
     }
 
-    if (response.status === 204) {
-        return null; // No Content
+    if (response.status === 204) return [];
+
+    const text = await response.text();
+    try {
+        return text ? JSON.parse(text) : [];
+    } catch (err) {
+        console.error("Błąd parsowania JSON:", text);
+        return [];
     }
 
-    // Spróbuj sparsować JSON, jeśli jest
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-        return await response.json();
-    }
-
-    return null;
 }
