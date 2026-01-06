@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DTOs;
 using WebApplication1.Exceptions;
@@ -18,6 +19,7 @@ public class ClientsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetClientsAsync()
     {
         var result = await _clientService.GetClientsAsync();
@@ -25,6 +27,7 @@ public class ClientsController : ControllerBase
     }
 
     [HttpGet("{clientId}")]
+    [Authorize(Roles = "admin,client")]
     public async Task<IActionResult> GetClientByIdAsync([FromRoute]int clientId)
     {
         var result = await _clientService.GetClientByIdAsync(clientId);
@@ -32,6 +35,7 @@ public class ClientsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateClientAsync([FromBody] ClientRequest client)
     {
         await _clientService.CreateClientAsync(client);
@@ -39,6 +43,7 @@ public class ClientsController : ControllerBase
     }
 
     [HttpPut("{clientId}")]
+    [Authorize(Roles = "admin,client")]
     public async Task<IActionResult> UpdateClientAsync([FromRoute]int clientId, [FromBody]ClientRequest clientRequest)
     {
         await _clientService.UpdateClientAsync(clientId, clientRequest);
@@ -47,6 +52,7 @@ public class ClientsController : ControllerBase
 
 
     [HttpDelete("{clientId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteClientAsync([FromRoute] int clientId)
     {
         await _clientService.DeleteClientAsync(clientId);

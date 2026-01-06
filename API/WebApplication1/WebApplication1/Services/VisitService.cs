@@ -40,13 +40,22 @@ public class VisitService : IVisitService
         {
             throw new NotFoundException($"Visit with id {visitId} was not found!");
         }
+        
+        var client = await _clientRepository.GetClientByIdAsync(visit.ClientId);
+        if(client == null) throw new NotFoundException($"Client with id {visit.ClientId} was not found!");
+        var barber = await _barberRepository.GetBarberByIdAsync(visit.BarberId);
+        if(barber == null) throw new NotFoundException($"Barber with id {visit.BarberId} was not found!");
+        
+        
         return new VisitDetailedDto()
         {
             VisitId = visit.VisitId,
             Start = visit.Start,
             End = visit.End,
             ClientId = visit.Client.ClientId,
+            ClientName = client.Name,
             BarberId = visit.Barber.BarberId,
+            BarberName = barber.Name,
             Price = visit.Price,
             Comment = visit.Comment,
         };
@@ -84,6 +93,14 @@ public class VisitService : IVisitService
         if (visitRequest == null)
             throw new BadRequestException("Visit request is required!");
         
+        if (visitRequest.Start >= visitRequest.End)
+            throw new BadRequestException("Visit start must be before end");
+        
+        ValidateWorkingHours(visitRequest.Start, visitRequest.End);
+        
+        if(visitRequest.Price < 0)
+            throw new BadRequestException("Visit price must not be less then 0!");
+        
         var client = await _clientRepository.GetClientByIdAsync(visitRequest.ClientId);
         if (client == null)
             throw new BadRequestException($"Client with id {visitRequest.ClientId} does not exist!");
@@ -91,6 +108,17 @@ public class VisitService : IVisitService
         var barber = await _barberRepository.GetBarberByIdAsync(visitRequest.BarberId);
         if (barber == null)
             throw new BadRequestException($"Barber with id {visitRequest.BarberId} does not exist!");
+        
+        var barberBusy = await _visitRepository
+            .BarberHasOverlappingVisitAsync(
+                visitRequest.BarberId,
+                visitRequest.Start,
+                visitRequest.End);
+
+        if (barberBusy)
+        {
+            throw new BadRequestException("Barber already has visit at this time!");
+        }
         
         
         var visit = new Visit()
@@ -117,10 +145,45 @@ public class VisitService : IVisitService
 
     public async Task UpdateVisit(int visitId, VisitRequest visitRequest)
     {
+        if (visitRequest == null)
+        {
+            throw new BadRequestException("Visit request is required!");
+        }
+        
         var existingVisit = await _visitRepository.GetVisitAsync(visitId);
         if (existingVisit == null)
         {
             throw new NotFoundException($"Visit with id {visitId} was not found!");
+        }
+
+        if (visitRequest.Start >= visitRequest.End)
+        {
+            throw new BadRequestException("Visit start must be before end");
+        }
+        
+        ValidateWorkingHours(visitRequest.Start, visitRequest.End);
+        
+        if(visitRequest.Price < 0)
+            throw new BadRequestException("Visit price must not be less then 0!");
+        
+        var client = await _clientRepository.GetClientByIdAsync(visitRequest.ClientId);
+        if (client == null)
+            throw new BadRequestException($"Client with id {visitRequest.ClientId} does not exist!");
+        
+        var barber = await _barberRepository.GetBarberByIdAsync(visitRequest.BarberId);
+        if (barber == null)
+            throw new BadRequestException($"Barber with id {visitRequest.BarberId} does not exist!");
+        
+        var barberBusy = await _visitRepository
+            .BarberHasOverlappingVisitAsync(
+                visitRequest.BarberId,
+                visitRequest.Start,
+                visitRequest.End,
+                visitId);
+
+        if (barberBusy)
+        {
+            throw new BadRequestException("Barber already has visit at this time!");
         }
         
         existingVisit.Start = visitRequest.Start;
@@ -129,17 +192,6 @@ public class VisitService : IVisitService
         existingVisit.BarberId = visitRequest.BarberId;
         existingVisit.Comment = visitRequest.Comment;
         existingVisit.Price = visitRequest.Price;
-        
-        // var visit = new Visit()
-        // {
-        //     VisitId = visitId,
-        //     Start = visitRequest.Start,
-        //     End = visitRequest.End,
-        //     ClientId = visitRequest.ClientId,
-        //     BarberId = visitRequest.BarberId,
-        //     Comment = visitRequest.Comment,
-        //     Price = visitRequest.Price
-        // };
         await _visitRepository.UpdateVisitAsync(existingVisit);
     }
 
@@ -152,5 +204,35 @@ public class VisitService : IVisitService
         }
         await _visitRepository.DeleteVisitAsync(visitId);
     }
+    
+    private void ValidateWorkingHours(DateTime start, DateTime end)
+    {
+        if (start.Date != end.Date)
+            throw new BadRequestException("Visit must be in one day");
+
+        var day = start.DayOfWeek;
+
+        if (day == DayOfWeek.Sunday)
+            throw new BadRequestException("Barbershop is closed on Sundays");
+
+        TimeSpan open;
+        TimeSpan close;
+
+        if (day == DayOfWeek.Saturday)
+        {
+            open = new TimeSpan(10, 0, 0);
+            close = new TimeSpan(14, 0, 0);
+        }
+        else
+        {
+            open = new TimeSpan(9, 0, 0);
+            close = new TimeSpan(18, 0, 0);
+        }
+
+        if (start.TimeOfDay < open || end.TimeOfDay > close)
+            throw new BadRequestException(
+                $"Barbershop works from {open} to {close}");
+    }
+
     
 }

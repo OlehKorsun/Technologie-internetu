@@ -69,4 +69,19 @@ public class VisitRepository : IVisitRepository
         _context.Visits.Remove(visit);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<bool> BarberHasOverlappingVisitAsync(
+        int barberId,
+        DateTime start,
+        DateTime end,
+        int? excludedVisitId = null)
+    {
+        return await _context.Visits.AnyAsync(v =>
+            v.BarberId == barberId &&
+            (excludedVisitId == null || v.VisitId != excludedVisitId) &&
+            v.Start < end &&
+            v.End > start
+        );
+    }
+
 }

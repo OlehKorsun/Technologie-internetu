@@ -9,6 +9,8 @@ public class AppDbContext : DbContext
     public DbSet<Client> Clients { get; set; }
     public DbSet<Barber> Barbers { get; set; }
     public DbSet<Visit> Visits { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
     protected AppDbContext()
     {
@@ -63,6 +65,30 @@ public class AppDbContext : DbContext
                 Comment = "Strzyrzenie + golenie",
                 Price = 150
             }
+        });
+
+        modelBuilder.Entity<Role>().HasData(new List<Role>()
+        {
+            new Role()
+            {
+                IdRole = 1,
+                Title = "admin"
+            },
+            new Role()
+            {
+                IdRole = 2,
+                Title = "user"
+            }
+            // new Role()
+            // {
+            //     IdRole = 3,
+            //     Title = "guest"
+            // }
+        });
+
+        modelBuilder.Entity<User>().HasData(new List<User>()
+        {
+            
         });
     }
     

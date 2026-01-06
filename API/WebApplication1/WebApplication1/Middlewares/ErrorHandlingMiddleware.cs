@@ -44,6 +44,14 @@ public class ErrorHandlingMiddleware
                 statusCode = (int)HttpStatusCode.NotFound;
                 message = exception.Message;
                 break;
+            case UserExistsException:
+                statusCode = (int)HttpStatusCode.Conflict;
+                message = exception.Message;
+                break;
+            case UnauthorizedAccessException:
+                statusCode = (int)HttpStatusCode.Unauthorized;
+                message = "Access Denied!";
+                break;
             default:
                 statusCode = (int)HttpStatusCode.InternalServerError;
                 message = exception.Message;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Requests;
 using WebApplication1.Services;
@@ -16,6 +17,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetVisits()
     {
         var visits = await _visitService.GetAllVisits();
@@ -23,6 +25,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpGet("{visitId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetVisitById([FromRoute]int visitId)
     {
         var visit = await _visitService.GetVisit(visitId);
@@ -30,6 +33,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpGet("client/{clientId}")]
+    [Authorize(Roles = "admin,client")]
     public async Task<IActionResult> GetVisitByClientId([FromRoute]int clientId)
     {
         var visits = await _visitService.GetVisitsByClientId(clientId);
@@ -37,6 +41,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpGet("barber/{barberId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetVisitsByBarberId([FromRoute]int barberId)
     {
         var visits = await _visitService.GetVisitsByBarberId(barberId);
@@ -44,6 +49,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateVisit([FromBody]VisitRequest visitRequest)
     {
         var visit = await _visitService.CreateVisit(visitRequest);
@@ -57,6 +63,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPut("{visitId}")]
+    [Authorize(Roles = "admin,client")]
     public async Task<IActionResult> UpdateVisit([FromRoute]int visitId, [FromBody]VisitRequest visitRequest)
     {
         await _visitService.UpdateVisit(visitId, visitRequest);
@@ -64,6 +71,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpDelete("{visitId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteVisit([FromRoute]int visitId)
     {
         await _visitService.DeleteVisit(visitId);

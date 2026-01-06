@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using WebApplication1.Requests;
@@ -17,6 +18,7 @@ public class BarbersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetBarbersAsync()
     {
         var barbers = await _barberService.GetBarbersAsync();
@@ -24,6 +26,7 @@ public class BarbersController : ControllerBase
     }
 
     [HttpGet("{barberId}")]
+    [Authorize(Roles = "admin,client")]
     public async Task<IActionResult> GetBarberByIdAsync([FromRoute]int barberId)
     {
         var barber = await _barberService.GetBarberAsync(barberId);
@@ -31,6 +34,7 @@ public class BarbersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateBarberAsync([FromBody]BarberRequest barberRequest)
     {
         await _barberService.CreateBarberAsync(barberRequest);
@@ -38,6 +42,7 @@ public class BarbersController : ControllerBase
     }
 
     [HttpPut("{barberId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> UpdateBarberAsync([FromRoute]int barberId, [FromBody]BarberRequest barberRequest)
     {
         await _barberService.UpdateBarberAsync(barberId, barberRequest);
@@ -46,6 +51,7 @@ public class BarbersController : ControllerBase
 
 
     [HttpDelete("{barberId}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeleteBarberAsync([FromRoute] int barberId)
     {
         await _barberService.DeleteBarberAsync(barberId);

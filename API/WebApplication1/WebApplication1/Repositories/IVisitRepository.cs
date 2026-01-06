@@ -12,4 +12,10 @@ public interface IVisitRepository
     Task AddVisitAsync(Visit visit);
     Task UpdateVisitAsync(Visit visit);
     Task DeleteVisitAsync(int visitId);
+    Task<bool> BarberHasOverlappingVisitAsync(
+        int barberId,
+        DateTime start,
+        DateTime end,
+        int? excludedVisitId = null);
+
 }
