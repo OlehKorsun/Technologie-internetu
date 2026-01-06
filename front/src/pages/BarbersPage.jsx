@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import BarberList from "../components/BarberList";
+import {apiFetch} from "../api/api";
 
 export default function BarbersPage() {
     const [barbers, setBarbers] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:5058/api/barbers")
-            .then(res => res.json())
+        apiFetch("http://localhost:5058/api/barbers")
             .then(data => setBarbers(data))
         .catch(err => {
             console.error(err);
@@ -17,7 +17,7 @@ export default function BarbersPage() {
     const deleteBarber = async (id) => {
         if (!window.confirm("Czy na pewno usunąć barbera?")) return;
 
-        const res = await fetch(`http://localhost:5058/api/barbers/${id}`, {
+        const res = await apiFetch(`http://localhost:5058/api/barbers/${id}`, {
             method: "DELETE"
         });
 

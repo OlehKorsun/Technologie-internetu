@@ -4,11 +4,11 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Repositories;
 
-public class UserRepositoty : IUserRepository
+public class UserRepository : IUserRepository
 {
     private readonly AppDbContext _context;
 
-    public UserRepositoty(AppDbContext context)
+    public UserRepository(AppDbContext context)
     {
         this._context = context;
     }

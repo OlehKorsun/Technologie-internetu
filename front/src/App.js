@@ -14,6 +14,9 @@ import VisitsPage from "./pages/VisitsPage";
 import ClientForm from "./components/ClientForm";
 import BarberForm from "./components/BarberForm";
 import VisitForm from "./components/VisitForm";
+import PrivateRoute from "./auth/PrivateRoute";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
     return (
@@ -22,13 +25,29 @@ function App() {
 
             <Routes>
                 <Route path="/" element={<Home/>}/>
+                <Route path="/register" element={<RegisterPage/>}/>
+                <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<About/>}/>
-                <Route path="/clients" element={<ClientsPage/>}/>
-                <Route path="/barbers" element={<BarbersPage/>}/>
-                <Route path="/visits" element={<VisitsPage/>}/>
+                <Route path="/clients" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <ClientsPage/>
+                    </PrivateRoute>
+                }/>
+                <Route path="/barbers" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <BarbersPage/>
+                    </PrivateRoute>
+                }/>
+                <Route path="/visits" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <VisitsPage/>
+                    </PrivateRoute>}/>
 
                 <Route path="/client/:id" element={<ClientDetails/>}/>
-                <Route path="/barber/:id" element={<BarberDetails/>}/>
+                <Route path="/barber/:id" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <BarberDetails/>
+                    </PrivateRoute>}/>
                 <Route path="/visit/:id" element={<VisitDetails/>}/>
 
                 <Route path="/client/add" element={<ClientForm/>}/>

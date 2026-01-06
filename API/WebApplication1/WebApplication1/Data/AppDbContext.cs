@@ -16,13 +16,24 @@ public class AppDbContext : DbContext
     {
     }
 
-    public AppDbContext(DbContextOptions options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.IdRolaNavigation)
+            .WithMany(r => r.Users)
+            .HasForeignKey(u => u.IdRola)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Client>()
+            .HasOne(c => c.User)
+            .WithOne(u => u.Client)
+            .HasForeignKey<Client>(c => c.UserId);
 
         modelBuilder.Entity<Client>().HasData(new List<Client>()
         {
@@ -79,16 +90,16 @@ public class AppDbContext : DbContext
                 IdRole = 2,
                 Title = "user"
             }
-            // new Role()
-            // {
-            //     IdRole = 3,
-            //     Title = "guest"
-            // }
         });
 
-        modelBuilder.Entity<User>().HasData(new List<User>()
+        modelBuilder.Entity<User>().HasData(new User()
         {
-            
+            IdUser = 1,
+            Login = "admin",
+            Email = "admin@admin.com",
+            Password = "HASHED_PASSWORD",
+            Salt = "HASHED_SALT",
+            IdRola = 1
         });
     }
     

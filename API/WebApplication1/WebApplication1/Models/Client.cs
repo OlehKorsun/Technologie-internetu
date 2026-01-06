@@ -21,4 +21,7 @@ public class Client
     public DateOnly BirthDate { get; set; }
     
     public ICollection<Visit> Visits { get; set; }
+    
+    public User? User { get; set; }
+    public int? UserId { get; set; }
 }

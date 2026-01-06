@@ -25,6 +25,8 @@ public class AuthService : IAuthServise
     
     public async Task<String> LoginAsync(LoginRequest request)
     {
+        Console.WriteLine(request.Login);
+        Console.WriteLine(request.Password);
         var user = await _userRepository.GetUserByLoginAsync(request.Login);
 
         if (user == null)
@@ -33,6 +35,7 @@ public class AuthService : IAuthServise
         }
 
         var hash = ComputeHash(request.Password + user.Salt);
+        Console.WriteLine($"Hash: ${hash}");
         if (user.Password != hash)
         {
             throw new UnauthorizedAccessException("Invalid password.");
@@ -45,6 +48,11 @@ public class AuthService : IAuthServise
 
     public async Task RegisterAsync(RegisterUserRequest request)
     {
+        if (request == null)
+        {
+            throw new BadRequestException("Register request is required!");
+        }
+        
         var user = await _userRepository.GetUserByLoginAsync(request.Login);
         if (user != null)
         {
@@ -53,17 +61,8 @@ public class AuthService : IAuthServise
 
         var hashSold = CreateSold();
         var hashPassword = ComputeHash(request.Password + hashSold);
-
-        var role = await _roleRepository.GetRoleByTitle(request.RoleTitle);
-        int roleId;
-        if (role == null)
-        {
-            roleId = 2;  // domyślnia rola - user
-        }
-        else
-        {
-            roleId = role.IdRole;
-        }
+        
+        int roleId = 2;
         
         user = new User()
         {
@@ -82,7 +81,7 @@ public class AuthService : IAuthServise
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Login),
             new Claim(ClaimTypes.Role, user.IdRolaNavigation.Title)
         };
 

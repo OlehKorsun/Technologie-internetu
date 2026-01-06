@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication1.Data;
 
@@ -11,9 +12,11 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260106161929_AddUserAndRoles")]
+    partial class AddUserAndRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,6 +186,9 @@ namespace WebApplication1.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("RoleIdRole")
+                        .HasColumnType("int");
+
                     b.Property<string>("Salt")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -191,6 +197,8 @@ namespace WebApplication1.Migrations
                     b.HasKey("IdUser");
 
                     b.HasIndex("IdRola");
+
+                    b.HasIndex("RoleIdRole");
 
                     b.ToTable("Users");
 
@@ -287,10 +295,14 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Models.User", b =>
                 {
                     b.HasOne("WebApplication1.Models.Role", "IdRolaNavigation")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("IdRola")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.Role", null)
+                        .WithMany("Users")
+                        .HasForeignKey("RoleIdRole");
 
                     b.Navigation("IdRolaNavigation");
                 });

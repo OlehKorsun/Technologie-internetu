@@ -24,13 +24,15 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        return Ok();
+        var result = await _authServise.LoginAsync(request);
+        return Ok(result);
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
+        await _authServise.RegisterAsync(request);
         return Ok("Rejestracja przebiegła prawidłowo");
     }
 }
