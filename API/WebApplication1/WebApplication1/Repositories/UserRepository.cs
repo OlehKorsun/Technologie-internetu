@@ -13,17 +13,17 @@ public class UserRepository : IUserRepository
         this._context = context;
     }
 
-    public async Task<User?> GetUserByLoginAsync(string login)
+    public async Task<User?> GetUserByLoginAsync(string login, CancellationToken ct)
     {
         return await _context.Users
             .Include(u => u.IdRolaNavigation)
-            .FirstOrDefaultAsync(u => u.Login == login);
+            .FirstOrDefaultAsync((u => u.Login == login), ct);
     }
 
-    public async Task AddUserAsync(User user)
+    public async Task AddUserAsync(User user, CancellationToken ct)
     {
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        await _context.Users.AddAsync(user, ct);
+        await _context.SaveChangesAsync(ct);
     }
 
 }

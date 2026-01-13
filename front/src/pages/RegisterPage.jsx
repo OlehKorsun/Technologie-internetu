@@ -10,6 +10,7 @@ export default function RegisterPage() {
 
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,6 +19,7 @@ export default function RegisterPage() {
     const handleSubmit = async e => {
         e.preventDefault();
         setError(null);
+        setLoading(true);
 
         const res = await fetch("http://localhost:5058/register", {
             method: "POST",
@@ -28,6 +30,7 @@ export default function RegisterPage() {
         if(!res.ok) {
             const text = await res.text();
             setError(text || "Błąd rejestracji");
+            setLoading(false);
             return;
         }
 
@@ -40,31 +43,39 @@ export default function RegisterPage() {
 
             {error && <p className="error">{error}</p>}
 
-            <input
-                name="login"
-                type="text"
-                placeholder="Login"
-                onChange={handleChange}
-                required
-            />
+            <div className="form_row">
+                <input
+                    name="login"
+                    type="text"
+                    placeholder="Login"
+                    onChange={handleChange}
+                    required
+                />
+            </div>
 
-            <input
-                name="email"
-                type="email"
-                placeholder="Email"
-                onChange={handleChange}
-                required
-            />
+            <div className="form_row">
+                <input
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    onChange={handleChange}
+                    required
+                />
+            </div>
 
-            <input
-                name="password"
-                type="password"
-                placeholder="Hasło"
-                onChange={handleChange}
-                required
-            />
+            <div className="form_row">
+                <input
+                    name="password"
+                    type="password"
+                    placeholder="Hasło"
+                    onChange={handleChange}
+                    required
+                />
+            </div>
 
-            <button type="submit">Zarejestruj</button>
+            <div className="form_action">
+                <button type="submit" disabled={loading}>Zarejestruj</button>
+            </div>
         </form>
     );
 }

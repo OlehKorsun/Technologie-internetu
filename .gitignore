@@ -94,3 +94,10 @@ desktop.ini
 *.pid
 *.seed
 *.pid.lock
+
+# Wszystkie pliki graficzne
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg

@@ -13,15 +13,15 @@ public class RoleRepository : IRoleRepository
         _context = context;
     }
 
-    public async Task<Role?> GetRoleById(int roleId)
+    public async Task<Role?> GetRoleById(int roleId, CancellationToken ct)
     {
-        var role = await _context.Roles.FindAsync(roleId);
+        var role = await _context.Roles.FindAsync([roleId], ct);
         return role;
     }
 
-    public async Task<Role?> GetRoleByTitle(string roleTitle)
+    public async Task<Role?> GetRoleByTitle(string roleTitle, CancellationToken ct)
     {
-        var role = await _context.Roles.FirstOrDefaultAsync(r => r.Title == roleTitle);
+        var role = await _context.Roles.FirstOrDefaultAsync((r => r.Title == roleTitle), ct);
         return role;
     }
 }

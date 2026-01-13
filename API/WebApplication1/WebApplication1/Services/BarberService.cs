@@ -9,21 +9,31 @@ namespace WebApplication1.Services;
 public class BarberService(IBarberRepository barberRepository, IVisitRepository visitRepository) : IBarberService
 {
 
-    public async Task<IEnumerable<BarberDto>> GetBarbersAsync()
+    public async Task<PagedRecords<BarberDto>> GetBarbersAsync(int page, int pageSize, CancellationToken ct)
     {
-        var barbers = await barberRepository.GetAllBarbersAsync();
-        return barbers.Select(b => new BarberDto()
+        var barbers = await barberRepository.GetAllBarbersAsync(page, pageSize, ct);
+        var a = barbers.Select(b => new BarberDto()
         {
             BarberId = b.BarberId,
             Name = b.Name,
             Surname = b.Surname,
         });
 
+        var count = await barberRepository.GetBarberCountAsync(ct);
+
+        return new PagedRecords<BarberDto>
+        {
+            Records = a,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = count
+        };
+
     }
 
-    public async Task<BarberDetailedDto> GetBarberAsync(int barberId)
+    public async Task<BarberDetailedDto> GetBarberAsync(int barberId, CancellationToken ct)
     {
-        var barber = await barberRepository.GetBarberByIdAsync(barberId);
+        var barber = await barberRepository.GetBarberByIdAsync(barberId, ct);
         if (barber == null)
         {
             throw new NotFoundException($"Barber with id {barberId} was not found!");
@@ -39,7 +49,7 @@ public class BarberService(IBarberRepository barberRepository, IVisitRepository 
     }
 
 
-    public async Task CreateBarberAsync(BarberRequest? barberRequest)
+    public async Task CreateBarberAsync(BarberRequest? barberRequest, CancellationToken ct)
     {
         if (barberRequest == null)
         {
@@ -76,11 +86,11 @@ public class BarberService(IBarberRepository barberRepository, IVisitRepository 
             BirthDate = barberRequest.BirthDate,
         };
         
-        await barberRepository.AddBarberAsync(barber);
+        await barberRepository.AddBarberAsync(barber, ct);
     }
 
 
-    public async Task UpdateBarberAsync(int barberId, BarberRequest? barberRequest)
+    public async Task UpdateBarberAsync(int barberId, BarberRequest? barberRequest, CancellationToken ct)
     {
         if (barberRequest == null)
         {
@@ -105,21 +115,21 @@ public class BarberService(IBarberRepository barberRepository, IVisitRepository 
             Surname = barberRequest.Surname,
             BirthDate = barberRequest.BirthDate,
         };
-        await barberRepository.UpdateBarberAsync(barber);
+        await barberRepository.UpdateBarberAsync(barber, ct);
     }
 
-    public async Task DeleteBarberAsync(int barberId)
+    public async Task DeleteBarberAsync(int barberId, CancellationToken ct)
     {
-        var barber = await barberRepository.GetBarberByIdAsync(barberId);
+        var barber = await barberRepository.GetBarberByIdAsync(barberId, ct);
         if (barber == null)
             throw new NotFoundException($"Barber with id {barberId} was not found!");
         
-        var visits = await visitRepository.GetVisitsByBarberId(barberId);
+        var visits = await visitRepository.GetVisitsByBarberId(barberId, ct);
         if (visits.Any())
         {
             throw new BadRequestException($"Barber with id {barberId} has visits!");
         }
         
-        await barberRepository.DeleteBarberAsync(barber);
+        await barberRepository.DeleteBarberAsync(barber, ct);
     }
 }

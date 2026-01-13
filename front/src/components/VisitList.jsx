@@ -1,7 +1,15 @@
 import {Link} from "react-router-dom";
+import React from "react";
 
-export default function VisitList({ visits, onDelete }) {
-    if(!visits) return (<p>Ładowanie...</p>)
+export default function VisitList({ visits, onDelete, page, setPage, totalPages, loading }) {
+
+    if(loading) {return <p>Ładowanie...</p>}
+    if(!visits || visits.length === 0) return (
+        <div>
+            <p>Brak wizyt</p>
+            <button disabled={page <= 1} onClick={() => setPage(page - 1)}>« Poprzednia</button>
+        </div>
+    );
 
     return (
         <article>
@@ -45,6 +53,13 @@ export default function VisitList({ visits, onDelete }) {
                 ))}
                 </tbody>
             </table>
+
+            <div className="pagination">
+                <button disabled={page <= 1} onClick={() => setPage(prev => prev - 1)}>« Poprzednia</button>
+                <span>Strona {page} z {totalPages}</span>
+                <button disabled={page >= totalPages} onClick={() => setPage(prev => prev + 1)}>Następna »</button>
+            </div>
+
             <Link to={`/visit/add`} className="btn btn-add">
                 Dodaj wizytę
             </Link>

@@ -16,9 +16,7 @@ export default function BarberDetails(){
                 if(response.status === 404){
                     setBarber(null);
                 } else{
-                    const data = await response.json();
-                    setBarber(data);
-                    // setBarber(response)
+                    setBarber(response)
                 }
             } catch (err){
                 setBarber(null);
@@ -38,9 +36,7 @@ export default function BarberDetails(){
                 if(response.status === 404){
                     setVisits([]);
                 } else {
-                    const data = await response.json();
-                    setVisits(data);
-                    // setVisits(response)
+                    setVisits(response)
                 }
             } catch (err){
                 setVisits(null);
@@ -66,6 +62,9 @@ export default function BarberDetails(){
                     <p>Nazwisko: {barber.surname}</p>
                     <p>Data urodzenia: {barber.birthDate}</p>
                 </div>
+            </div>
+
+            <div className="btm-bottom">
                 <Link to="/barbers" className="btn btn-add">Powrót</Link>
             </div>
 
@@ -92,8 +91,6 @@ export default function BarberDetails(){
                 ))}
                 </tbody>
             </table>
-
         </>
-
     );
 }

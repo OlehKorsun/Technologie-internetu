@@ -13,33 +13,43 @@ public class BarberRepository : IBarberRepository
         _context = context;
     }
 
-    public async Task<List<Barber>> GetAllBarbersAsync()
+    public async Task<List<Barber>> GetAllBarbersAsync(int page, int pageSize, CancellationToken ct)
     {
-        var barbers = await _context.Barbers.ToListAsync();
+        var barbers = await _context.Barbers
+            .OrderBy(b => b.BarberId)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
         return barbers;
     }
 
-    public async Task<Barber?> GetBarberByIdAsync(int id)
+    public async Task<Barber?> GetBarberByIdAsync(int id, CancellationToken ct)
     {
-        var barber = await _context.Barbers.FindAsync(id);
+        var barber = await _context.Barbers.FindAsync([id], ct);
         return barber;
     }
 
-    public async Task AddBarberAsync(Barber barber)
+    public async Task AddBarberAsync(Barber barber, CancellationToken ct)
     {
-        await _context.Barbers.AddAsync(barber);
-        await _context.SaveChangesAsync();
+        await _context.Barbers.AddAsync(barber, ct);
+        await _context.SaveChangesAsync(ct);
     }
 
-    public async Task UpdateBarberAsync(Barber barber)
+    public async Task UpdateBarberAsync(Barber barber, CancellationToken ct)
     {
         _context.Barbers.Update(barber);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
     }
 
-    public async Task DeleteBarberAsync(Barber barber)
+    public async Task DeleteBarberAsync(Barber barber, CancellationToken ct)
     {
         _context.Barbers.Remove(barber);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
+    }
+
+    public async Task<int> GetBarberCountAsync(CancellationToken ct)
+    {
+        var count = await _context.Barbers.CountAsync(ct);
+        return count;
     }
 }

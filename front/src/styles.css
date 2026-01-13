@@ -62,12 +62,6 @@ table td:first-child {
     text-overflow: ellipsis;
 }
 
-table td:first-child {
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .btm-bottom {
     text-align: center;
     margin-top: 20px;
@@ -80,6 +74,12 @@ article {
     color: #ECF0F1;
     text-align: center;
 }
+
+/*article {*/
+/*    margin: 0 auto 25px;*/
+/*    padding: 20px;*/
+/*    max-width: 900px;*/
+/*}*/
 
 article h2 {
     text-align: center;
@@ -99,12 +99,18 @@ body h2{
     font-family: "Oswald", sans-serif;
 }
 
+/*header {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*    margin-top: 15px;*/
+/*    margin-bottom: 15px;*/
+/*}*/
+
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
 }
 
 .header-content {
@@ -122,8 +128,8 @@ header {
     box-shadow: 5px 5px 15px darkgrey;
 }
 
-header h1 {
-    margin: 0 auto;
+header h1, header h2 {
+    margin: 5px;
     text-align: center;
     font-family: "Impact", sans-serif;
 }
@@ -317,7 +323,7 @@ label {
 
 .error-msg {
     color: #e74c3c;
-    font-size: 0.9em;
+    font-size: 1em;
     margin-top: 4px;
 }
 

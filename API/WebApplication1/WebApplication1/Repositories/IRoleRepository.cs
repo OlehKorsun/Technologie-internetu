@@ -4,6 +4,6 @@ namespace WebApplication1.Repositories;
 
 public interface IRoleRepository
 {
-    Task<Role?> GetRoleById(int roleId);
-    Task<Role?> GetRoleByTitle(string roleTitle);
+    Task<Role?> GetRoleById(int roleId, CancellationToken ct);
+    Task<Role?> GetRoleByTitle(string roleTitle, CancellationToken ct);
 }

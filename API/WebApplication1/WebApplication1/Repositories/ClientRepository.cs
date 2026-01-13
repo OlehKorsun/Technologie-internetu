@@ -13,35 +13,53 @@ public class ClientRepository : IClientRepository
         _context = context;
     }
 
-    public async Task<List<Client>> GetClientsAsync()
+    public async Task<List<Client>> GetClientsAsync(int page, int pageSize, CancellationToken ct)
     {
-        var clients = await _context.Clients.ToListAsync();
+        var clients = await _context.Clients
+            .OrderBy(c => c.UserId)
+            .Skip((page-1)*pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
         return clients;
     }
 
-    public async Task<Client?> GetClientByIdAsync(int id)
+    public async Task<Client?> GetClientByIdAsync(int id, CancellationToken ct)
     {
-        var client = await _context.Clients.FindAsync(id);
+        var client = await _context.Clients.FindAsync([id], ct);
         return client;
     }
 
-    public async Task AddClientAsync(Client client)
+    public async Task AddClientAsync(Client client, CancellationToken ct)
     {
         _context.Clients.Add(client);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
     }
 
-    public async Task UpdateClientAsync(Client client)
+    public async Task UpdateClientAsync(Client client, CancellationToken ct)
     {
         _context.Update(client);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
     }
 
-    public async Task DeleteClientAsync(int clientId)
+    public async Task DeleteClientAsync(int clientId, CancellationToken ct)
     {
-        var client = await _context.Clients.FindAsync(clientId);
+        var client = await _context.Clients.FindAsync([clientId], ct);
         _context.Clients.Remove(client);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(ct);
     }
 
+    public async Task<Client?> GetClientByUserIdAsync(int userId, CancellationToken ct)
+    {
+        var client = await _context.Clients
+            .Include(c => c.User)
+            .FirstOrDefaultAsync((c => c.UserId == userId), ct);
+        return client;
+    }
+
+    public async Task<int> GetClientCountAsync(CancellationToken ct)
+    {
+        var count = await _context.Clients.CountAsync(ct);
+        return count;
+    }
+    
 }

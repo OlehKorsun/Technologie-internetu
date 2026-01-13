@@ -1,16 +1,20 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function ClientList({ clients, onDelete }) {
+export default function ClientList({ clients, onDelete, page, setPage, totalPages, loading }) {
 
-    if(!clients) return (<p>Ładowanie...</p>);
-
-    if (clients.length === 0)  return <p>Brak klientów</p>;
+    if (loading) return <p>Ładowanie...</p>;
+    if (!clients || clients.length === 0)
+        return (
+            <div>
+                <p>Brak klientów</p>
+                <button disabled={page <= 1} onClick={() => setPage(page - 1)}>« Poprzednia</button>
+            </div>
+        );
 
     return (
         <article>
             <div className="table-header">
                 <h2>Lista klientów</h2>
-
             </div>
 
             <table>
@@ -25,8 +29,8 @@ export default function ClientList({ clients, onDelete }) {
                 {clients.map(c => (
                     <tr key={c.clientId}>
                         <td>{c.name} {c.surname}</td>
-
                         <td className="actions">
+
                             <Link to={`/client/${c.clientId}`} className="btn btn-add">
                                 Szczegóły
                             </Link>
@@ -37,8 +41,7 @@ export default function ClientList({ clients, onDelete }) {
 
                             <button
                                 className="btn btn-delete"
-                                onClick={() => onDelete(c.clientId)}
-                            >
+                                onClick={() => onDelete(c.clientId)}>
                                 Usuń
                             </button>
                         </td>
@@ -46,6 +49,12 @@ export default function ClientList({ clients, onDelete }) {
                 ))}
                 </tbody>
             </table>
+
+            <div className="pagination">
+                <button disabled={page <= 1} onClick={() => setPage(prev => prev - 1)}>« Poprzednia</button>
+                <span>Strona {page} z {totalPages}</span>
+                <button disabled={page >= totalPages} onClick={() => setPage(prev => prev + 1)}>Następna »</button>
+            </div>
 
             <Link to={`/client/add`} className="btn btn-add">
                 Dodaj klienta

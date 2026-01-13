@@ -17,8 +17,7 @@ export default function ClientDetails(){
                 if(response.status === 404){
                     setClient(null);
                 } else {
-                    const data = await response.json();
-                    setClient(data);
+                    setClient(response);
                 }
             } catch (err){
                 setClient(null);
@@ -38,9 +37,7 @@ export default function ClientDetails(){
                 if(response.status === 404){
                     setVisits([]);
                 } else {
-                    const data = await response.json();
-                    setVisits(data);
-                    // setVisits(response);
+                    setVisits(response);
                 }
             } catch (err){
                 setVisits(null);
@@ -57,7 +54,6 @@ export default function ClientDetails(){
         return <h2>Nie znaleziono klienta o id {id}</h2>
     }
 
-
     return (
         <>
             <div className="details-card">
@@ -68,7 +64,9 @@ export default function ClientDetails(){
                     <p><strong>Nazwisko:</strong> {client.surname}</p>
                     <p><strong>Data urodzenia:</strong> {client.birthDate}</p>
                 </div>
+            </div>
 
+            <div className="btm-bottom">
                 <Link to="/clients" className="btn btn-add">Powrót</Link>
             </div>
 
@@ -95,7 +93,6 @@ export default function ClientDetails(){
                 ))}
                 </tbody>
             </table>
-
         </>
     );
 }

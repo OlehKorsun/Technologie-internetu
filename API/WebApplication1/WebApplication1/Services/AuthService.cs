@@ -13,19 +13,17 @@ namespace WebApplication1.Services;
 public class AuthService : IAuthServise
 {
     private readonly IUserRepository _userRepository;
-    private readonly IRoleRepository _roleRepository;
     private readonly IConfiguration _configuration;
 
-    public AuthService(IUserRepository userRepository, IRoleRepository roleRepository, IConfiguration configuration)
+    public AuthService(IUserRepository userRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
-        _roleRepository = roleRepository;
         _configuration = configuration;
     }
     
-    public async Task<String> LoginAsync(LoginRequest request)
+    public async Task<String> LoginAsync(LoginRequest request, CancellationToken ct)
     {
-        var user = await _userRepository.GetUserByLoginAsync(request.Login);
+        var user = await _userRepository.GetUserByLoginAsync(request.Login, ct);
 
         if (user == null)
         {
@@ -43,14 +41,14 @@ public class AuthService : IAuthServise
     }
 
 
-    public async Task RegisterAsync(RegisterUserRequest request)
+    public async Task RegisterAsync(RegisterUserRequest request, CancellationToken ct)
     {
         if (request == null)
         {
             throw new BadRequestException("Register request is required!");
         }
         
-        var user = await _userRepository.GetUserByLoginAsync(request.Login);
+        var user = await _userRepository.GetUserByLoginAsync(request.Login, ct);
         if (user != null)
         {
             throw new UserExistsException("User with given login already exists!");
@@ -70,7 +68,7 @@ public class AuthService : IAuthServise
             IdRola = roleId,
         };
         
-        await _userRepository.AddUserAsync(user);
+        await _userRepository.AddUserAsync(user, ct);
     }
     
     

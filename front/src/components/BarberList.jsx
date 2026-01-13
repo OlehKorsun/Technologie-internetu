@@ -1,13 +1,21 @@
 import {Link} from "react-router-dom";
 
-export default function BarberList({ barbers, onDelete }) {
-    if(!barbers){ return (<p>Ładowanie...</p>);}
+export default function BarberList({ barbers, onDelete, page, setPage, totalPages, loading }) {
+
+    if(loading) return <p>Ładowanie...</p>
+    if(!barbers || barbers.length === 0) return (
+            <div>
+                <p>Brak barberów</p>
+                <button disabled={page <= 1} onClick={() => setPage(page - 1)}>« Poprzednia</button>
+            </div>
+        );
 
     return (
         <article>
             <div className="table-header">
                 <h2>Lista barberów</h2>
             </div>
+
             <table>
                 <thead>
                     <tr>
@@ -15,6 +23,7 @@ export default function BarberList({ barbers, onDelete }) {
                         <th>Akcje</th>
                     </tr>
                 </thead>
+
                 <tbody>
                 {barbers.map(b => (
                     <tr key={b.barberId}>
@@ -31,8 +40,7 @@ export default function BarberList({ barbers, onDelete }) {
 
                             <button
                                 className="btn btn-delete"
-                                onClick={() => onDelete(b.barberId)}
-                            >
+                                onClick={() => onDelete(b.barberId)}>
                                 Usuń
                             </button>
                         </td>
@@ -40,6 +48,13 @@ export default function BarberList({ barbers, onDelete }) {
                 ))}
                 </tbody>
             </table>
+
+            <div className="pagination">
+                <button disabled={page <= 1} onClick={() => setPage(prev => prev - 1)}>« Poprzednia</button>
+                <span>Strona {page} z {totalPages}</span>
+                <button disabled={page >= totalPages} onClick={() => setPage(prev => prev + 1)}>Następna »</button>
+            </div>
+
             <Link to={`/barber/add`} className="btn btn-add">
                 Dodaj barbera
             </Link>

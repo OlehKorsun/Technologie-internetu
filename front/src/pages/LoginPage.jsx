@@ -1,12 +1,16 @@
 import {useAuth} from "../auth/AuthContext";
-import {Form, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 
 export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setLoading(true);
 
         const res = await fetch("http://localhost:5058/api/auth/login", {
             method: "POST",
@@ -19,6 +23,7 @@ export default function LoginPage() {
 
         if(!res.ok) {
             alert("Błędne dane logowania!");
+            setLoading(false);
             return;
         }
 
@@ -29,9 +34,28 @@ export default function LoginPage() {
 
     return (
         <form onSubmit={handleSubmit}>
-            <input name="login" placeholder="Login" />
-            <input name="password" placeholder="Password" />
-            <button type="submit">Zaloguj</button>
+            <h2>Zaloguj się</h2>
+            <div className="form_row">
+                <input
+                    name="login"
+                    type="text"
+                    placeholder="Login"
+                    required
+                />
+            </div>
+
+            <div className="form_row">
+                <input
+                    name="password"
+                    type="password"
+                    placeholder="Hasło"
+                    required
+                />
+            </div>
+
+            <div className="form_action">
+                <button type="submit" disabled={loading}>Zaloguj</button>
+            </div>
         </form>
     );
 }

@@ -92,16 +92,27 @@ public class AppDbContext : DbContext
             }
         });
 
-        modelBuilder.Entity<User>().HasData(new User()
+        modelBuilder.Entity<User>().HasData(new List<User>()
         {
-            IdUser = 1,
-            Login = "admin",
-            Email = "admin@admin.com",
-            Password = "HASHED_PASSWORD",
-            Salt = "HASHED_SALT",
-            IdRola = 1
+            new User()
+            {
+                IdUser = 1,
+                Login = "admin",
+                Email = "admin@admin.com",
+                Password = "SeY/CbA+P1GBOH88Dzs2U9zVRekKqsBH9x+OlGo1DEc=",
+                Salt = "jEfZ4JpeO3uVhVCUb02oiw==",
+                IdRola = 1
+            },
+            
+            new User()
+            {
+                IdUser = 2,
+                Login = "nowak_a",
+                Email = "nowak_a@example.com",
+                Password = "rwTM4ndZ6UY02uV7cg/KcBiWJjqX/4/Ak1/Td2sKuuU=",
+                Salt = "2RnLSFf8bHnZo5IJMT/7sQ==",
+                IdRola = 2
+            }
         });
     }
-    
-    
 }

@@ -35,7 +35,6 @@ export default function Navbar(){
 
             {user && (
                 <>
-                    <span>{user.login}</span>
                     <button onClick={logout}>Wyloguj</button>
                 </>
             )}

@@ -51,7 +51,11 @@ function App() {
                         <BarberDetails/>
                     </PrivateRoute>}/>
 
-                <Route path="/visit/:id" element={<VisitDetails/>}/>
+                <Route path="/visit/:id" element={
+                    <PrivateRoute roles={["admin", "user"]}>
+                        <VisitDetails/>
+                    </PrivateRoute>
+                }/>
 
                 <Route path="/client/add" element={<ClientForm/>}/>
                 <Route path="/client/edit/:id" element={<ClientForm/>}/>

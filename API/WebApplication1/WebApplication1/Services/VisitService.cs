@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using WebApplication1.DTOs;
 using WebApplication1.Exceptions;
 using WebApplication1.Models;
@@ -19,10 +20,10 @@ public class VisitService : IVisitService
         _barberRepository = barberRepository;
     }
 
-    public async Task<IEnumerable<VisitDto>> GetAllVisits()
+    public async Task<PagedRecords<VisitDto>> GetAllVisits(int page, int pageSize, CancellationToken ct)
     {
-        var visits = await _visitRepository.GetAllVisitsAsync();
-        return visits.Select(v => new VisitDto()
+        var visits = await _visitRepository.GetAllVisitsAsync(page, pageSize, ct);
+        var a = visits.Select(v => new VisitDto
         {
             VisitId = v.VisitId,
             Start = v.Start,
@@ -31,21 +32,30 @@ public class VisitService : IVisitService
             BarberName = v.Barber.Name,
             Price = v.Price
         });
+
+        var count = await _visitRepository.GetVisitCountAsync(ct);
+        
+        return new PagedRecords<VisitDto>
+        {
+            Records = a,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = count
+        };
     }
 
-    public async Task<VisitDetailedDto> GetVisit(int visitId)
+    public async Task<VisitDetailedDto> GetVisit(int visitId, CancellationToken ct)
     {
-        var visit = await _visitRepository.GetVisitAsync(visitId);
+        var visit = await _visitRepository.GetVisitAsync(visitId, ct);
         if (visit == null)
         {
             throw new NotFoundException($"Visit with id {visitId} was not found!");
         }
         
-        var client = await _clientRepository.GetClientByIdAsync(visit.ClientId);
+        var client = await _clientRepository.GetClientByIdAsync(visit.ClientId, ct);
         if(client == null) throw new NotFoundException($"Client with id {visit.ClientId} was not found!");
-        var barber = await _barberRepository.GetBarberByIdAsync(visit.BarberId);
+        var barber = await _barberRepository.GetBarberByIdAsync(visit.BarberId, ct);
         if(barber == null) throw new NotFoundException($"Barber with id {visit.BarberId} was not found!");
-        
         
         return new VisitDetailedDto()
         {
@@ -61,9 +71,26 @@ public class VisitService : IVisitService
         };
     }
 
-    public async Task<IEnumerable<VisitDto>> GetVisitsByClientId(int clientId)
+    public async Task<VisitDetailedDto> GetVisitByUserId(int visitId, int userId, CancellationToken ct)
     {
-        var visits = await _visitRepository.GetVisitsByClientId(clientId);
+        var visit = await _visitRepository.GetVisitByUserIdAsync(visitId, userId, ct) 
+                    ?? throw new NotFoundException($"Visit with id {visitId} was not found for user {userId}!");
+
+        return new VisitDetailedDto
+        {
+            VisitId = visit.VisitId,
+            Start = visit.Start,
+            End = visit.End,
+            Comment = visit.Comment,
+            ClientName = visit.Client.Name,
+            BarberName = visit.Barber.Name,
+            Price = visit.Price,
+        };
+    }
+
+    public async Task<IEnumerable<VisitDto>> GetVisitsByClientId(int clientId, CancellationToken ct)
+    {
+        var visits = await _visitRepository.GetVisitsByClientId(clientId, ct);
         return visits.Select(v => new VisitDto()
         {
             VisitId = v.VisitId,
@@ -75,9 +102,9 @@ public class VisitService : IVisitService
         });
     }
 
-    public async Task<IEnumerable<VisitDto>> GetVisitsByBarberId(int barberId)
+    public async Task<IEnumerable<VisitDto>> GetVisitsByBarberId(int barberId, CancellationToken ct)
     {
-        var visits = await _visitRepository.GetVisitsByBarberId(barberId);
+        var visits = await _visitRepository.GetVisitsByBarberId(barberId, ct);
         return visits.Select(v => new VisitDto()
         {
             Start = v.Start,
@@ -88,9 +115,9 @@ public class VisitService : IVisitService
         });
     }
 
-    public async Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId)
+    public async Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId, CancellationToken ct)
     {
-        var visits = await _visitRepository.GetVisitsByUserId(userId);
+        var visits = await _visitRepository.GetVisitsByUserId(userId, ct);
         return visits.Select(v => new VisitDto()
         {
             VisitId = v.VisitId,
@@ -102,7 +129,7 @@ public class VisitService : IVisitService
         });
     }
 
-    public async Task<VisitDto> CreateVisit(VisitRequest visitRequest)        // Sprawdzić czy dobrze zrobione, czy wstawiać id czy obiekt
+    public async Task<VisitDto> CreateVisit(VisitRequest visitRequest, CancellationToken ct)
     {
         if (visitRequest == null)
             throw new BadRequestException("Visit request is required!");
@@ -115,11 +142,11 @@ public class VisitService : IVisitService
         if(visitRequest.Price < 0)
             throw new BadRequestException("Visit price must not be less then 0!");
         
-        var client = await _clientRepository.GetClientByIdAsync(visitRequest.ClientId);
+        var client = await _clientRepository.GetClientByIdAsync(visitRequest.ClientId, ct);
         if (client == null)
             throw new BadRequestException($"Client with id {visitRequest.ClientId} does not exist!");
         
-        var barber = await _barberRepository.GetBarberByIdAsync(visitRequest.BarberId);
+        var barber = await _barberRepository.GetBarberByIdAsync(visitRequest.BarberId, ct);
         if (barber == null)
             throw new BadRequestException($"Barber with id {visitRequest.BarberId} does not exist!");
         
@@ -127,7 +154,8 @@ public class VisitService : IVisitService
             .BarberHasOverlappingVisitAsync(
                 visitRequest.BarberId,
                 visitRequest.Start,
-                visitRequest.End);
+                visitRequest.End,
+                ct);
 
         if (barberBusy)
         {
@@ -145,7 +173,7 @@ public class VisitService : IVisitService
             Price = visitRequest.Price
         };
         
-        await _visitRepository.AddVisitAsync(visit);
+        await _visitRepository.AddVisitAsync(visit, ct);
         return new VisitDto()
         {
             VisitId = visit.VisitId,
@@ -157,14 +185,14 @@ public class VisitService : IVisitService
         };
     }
 
-    public async Task UpdateVisit(int visitId, VisitRequest visitRequest)
+    public async Task UpdateVisit(int visitId, VisitRequest visitRequest, CancellationToken ct)
     {
         if (visitRequest == null)
         {
             throw new BadRequestException("Visit request is required!");
         }
         
-        var existingVisit = await _visitRepository.GetVisitAsync(visitId);
+        var existingVisit = await _visitRepository.GetVisitAsync(visitId, ct);
         if (existingVisit == null)
         {
             throw new NotFoundException($"Visit with id {visitId} was not found!");
@@ -180,11 +208,11 @@ public class VisitService : IVisitService
         if(visitRequest.Price < 0)
             throw new BadRequestException("Visit price must not be less then 0!");
         
-        var client = await _clientRepository.GetClientByIdAsync(visitRequest.ClientId);
+        var client = await _clientRepository.GetClientByIdAsync(visitRequest.ClientId, ct);
         if (client == null)
             throw new BadRequestException($"Client with id {visitRequest.ClientId} does not exist!");
         
-        var barber = await _barberRepository.GetBarberByIdAsync(visitRequest.BarberId);
+        var barber = await _barberRepository.GetBarberByIdAsync(visitRequest.BarberId, ct);
         if (barber == null)
             throw new BadRequestException($"Barber with id {visitRequest.BarberId} does not exist!");
         
@@ -193,6 +221,7 @@ public class VisitService : IVisitService
                 visitRequest.BarberId,
                 visitRequest.Start,
                 visitRequest.End,
+                ct,
                 visitId);
 
         if (barberBusy)
@@ -206,17 +235,17 @@ public class VisitService : IVisitService
         existingVisit.BarberId = visitRequest.BarberId;
         existingVisit.Comment = visitRequest.Comment;
         existingVisit.Price = visitRequest.Price;
-        await _visitRepository.UpdateVisitAsync(existingVisit);
+        await _visitRepository.UpdateVisitAsync(existingVisit, ct);
     }
 
-    public async Task DeleteVisit(int visitId)
+    public async Task DeleteVisit(int visitId, CancellationToken ct)
     {
-        var existingVisit = await _visitRepository.GetVisitAsync(visitId);
+        var existingVisit = await _visitRepository.GetVisitAsync(visitId, ct);
         if (existingVisit == null)
         {
             throw new NotFoundException($"Visit with id {visitId} was not found!");
         }
-        await _visitRepository.DeleteVisitAsync(visitId);
+        await _visitRepository.DeleteVisitAsync(visitId, ct);
     }
     
     private void ValidateWorkingHours(DateTime start, DateTime end)

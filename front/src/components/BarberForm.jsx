@@ -1,83 +1,3 @@
-// import React from "react";
-//
-// export default function BarberForm({onBarberAdded}) {
-//     const [name, setName] = React.useState("");
-//     const [surname, setSurname] = React.useState("");
-//     const [birthDate, setBirthDate] = React.useState("");
-//
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//
-//         const newBarber = {
-//             name,
-//             surname,
-//             birthDate,
-//         };
-//
-//         try{
-//             const response = await fetch("http://localhost:5058/api/barbers", {
-//                 method: "POST",
-//                 headers: {"Content-Type": "application/json"},
-//                 body: JSON.stringify(newBarber),
-//             });
-//
-//             if(!response.ok){
-//                 alert(await response.text());
-//                 return;
-//             }
-//             alert("Barber dodany!");
-//             setName("");
-//             setSurname("");
-//             setBirthDate("");
-//             if(onBarberAdded) onBarberAdded();
-//         } catch (err){
-//             alert("Błąd!")
-//         }
-//     };
-//
-//     return (
-//         <article className="registration_container">
-//             <form onSubmit={handleSubmit}>
-//                 <h2>Dodaj barbera</h2>
-//
-//                 <div className="form_row">
-//                     <div className="form_group">
-//                         <label>Imię</label>
-//                         <input
-//                             type="text"
-//                             value={name}
-//                             onChange={(e) => setName(e.target.value)}
-//                         />
-//                     </div>
-//
-//                     <div className="form_group">
-//                         <label>Nazwisko</label>
-//                         <input
-//                             type="text"
-//                             value={surname}
-//                             onChange={(e) => setSurname(e.target.value)}
-//                         />
-//                     </div>
-//
-//                     <div className="form_group">
-//                         <label>Data urodzenia</label>
-//                         <input
-//                             type="date"
-//                             value={birthDate}
-//                             onChange={e => setBirthDate(e.target.value)}
-//                         />
-//                     </div>
-//                 </div>
-//
-//                 <div className="form_action">
-//                     <button type="submit">Dodaj</button>
-//                 </div>
-//
-//             </form>
-//         </article>
-//     );
-// }
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {apiFetch} from "../api/api";
@@ -96,37 +16,44 @@ export default function BarberForm() {
         birthDate: ""
     });
 
+    const [validationErrors, setValidationErrors] = useState({
+        name: "",
+        surname: "",
+        birthDate: ""
+    });
+
     useEffect(() => {
         if (!isEdit) return;
 
+        setLoading(true);
+        setError(null);
+
         apiFetch(`http://localhost:5058/api/barbers/${id}`)
-            .then(async res => {
-                if (!res.ok) {
-                    const msg = await res.text();
-                    throw new Error(msg);
-                }
-                return res.json();
-                // return res;
-            })
             .then(data => {
                 setForm({
-                    name: data.name,
-                    surname: data.surname,
-                    birthDate: data.birthDate.slice(0, 10)
+                    name: data.name ?? "",
+                    surname: data.surname ?? "",
+                    birthDate: data.birthDate ? data.birthDate.slice(0, 10) : ""
                 });
             })
-            .catch(err => setError(err.message));
+            .catch(err => setError(err.message))
+            .finally(() => setLoading(false));
     }, [id, isEdit]);
 
     const handleChange = e => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
+        const { name, value } = e.target;
+
+        setForm(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async e => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            setError("Popraw błędy w formularzu.");
+            return;
+        }
+
         setError(null);
         setLoading(true);
 
@@ -144,59 +71,108 @@ export default function BarberForm() {
             });
 
             if (!res.ok) {
-                const message = await res.text();
+                const message = res;
                 throw new Error(message || "Błąd zapisu danych");
             }
 
-            navigate("/barbers");
         } catch (err) {
             setError(err.message);
         } finally {
             setLoading(false);
+            navigate("/barbers");
         }
     };
+
+    const validateField = (name, value) => {
+        let error = "";
+
+        if (name === "name") {
+            if (value.trim().length < 2) error = "Imię musi mieć co najmniej 2 znaki.";
+            else if (value.length > 50) error = "Imię może mieć maksymalnie 50 znaków.";
+        }
+
+        if (name === "surname") {
+            if (value.trim().length < 2) error = "Nazwisko musi mieć co najmniej 2 znaki.";
+            else if (value.length > 50) error = "Nazwisko może mieć maksymalnie 50 znaków.";
+        }
+
+        if (name === "birthDate") {
+            const date = new Date(value);
+            const today = new Date();
+            today.setFullYear(today.getFullYear() - 18);
+
+            if (isNaN(date.getTime())) error = "Podaj prawidłową datę.";
+            else if (date > today) error = "Barber musi mieć co najmniej 18 lat.";
+        }
+
+        setValidationErrors(prev => ({ ...prev, [name]: error }));
+        return error === "";
+    };
+
+    const validateForm = () => {
+        const results = [
+            validateField("name", form.name),
+            validateField("surname", form.surname),
+            validateField("birthDate", form.birthDate)
+        ];
+
+        return results.every(r => r === true);
+    };
+
 
     const today = new Date();
     today.setFullYear(today.getFullYear() - 18);
 
-
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>{isEdit ? "Edytuj barbera" : "Dodaj barbera"}</h2>
-
-            <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Imię"
-                required
-            />
-
-            <input
-                name="surname"
-                value={form.surname}
-                onChange={handleChange}
-                placeholder="Nazwisko"
-                required
-            />
+        <>
+            <header>
+                <h2>{isEdit ? "Edytuj barbera" : "Dodaj barbera"}</h2>
+            </header>
+            <form onSubmit={handleSubmit}>
 
 
+                <div className="form_row">
+                    <input
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        placeholder="Imię"
+                        required
+                    />
+                    {validationErrors.name && <p className="error-msg">{validationErrors.name}</p>}
+                </div>
 
-            <input
-                type="date"
-                name="birthDate"
-                value={form.birthDate}
-                onChange={handleChange}
-                min="1900-01-01"
-                max={today.toISOString().split("T")[0]}
-                required
-            />
+                <div className="form_row">
+                    <input
+                        name="surname"
+                        value={form.surname}
+                        onChange={handleChange}
+                        placeholder="Nazwisko"
+                        required
+                    />
+                    {validationErrors.surname && <p className="error-msg">{validationErrors.surname}</p>}
+                </div>
 
-            <button type="submit" disabled={loading}>
-                {isEdit ? loading ? "Zapisywanie" : "Zapisz zmiany" : "Dodaj"}
-            </button>
+                <div className="form_row">
+                    <input
+                        type="date"
+                        name="birthDate"
+                        value={form.birthDate}
+                        onChange={handleChange}
+                        min="1900-01-01"
+                        max={today.toISOString().split("T")[0]}
+                        required
+                    />
+                    {validationErrors.birthDate && <p className="error-msg">{validationErrors.birthDate}</p>}
+                </div>
 
-            {error && <p className="error">{error}</p>}
-        </form>
+                <div className="form_action">
+                    <button type="submit" disabled={loading}>
+                        {isEdit ? loading ? "Zapisywanie" : "Zapisz zmiany" : "Dodaj"}
+                    </button>
+                    {error && <p className="error-msg">{error}</p>}
+                </div>
+            </form>
+        </>
     );
 }

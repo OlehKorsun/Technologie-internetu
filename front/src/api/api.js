@@ -31,5 +31,4 @@ export async function apiFetch(url, options = {}) {
         console.error("Błąd parsowania JSON:", text);
         return [];
     }
-
 }

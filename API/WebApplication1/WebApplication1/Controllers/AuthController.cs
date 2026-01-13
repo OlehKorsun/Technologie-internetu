@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Requests;
 using WebApplication1.Services;
@@ -22,17 +21,17 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct = default)
     {
-        var result = await _authServise.LoginAsync(request);
+        var result = await _authServise.LoginAsync(request, ct);
         return Ok(result);
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterUserRequest request, CancellationToken ct = default)
     {
-        await _authServise.RegisterAsync(request);
+        await _authServise.RegisterAsync(request, ct);
         return Ok("Rejestracja przebiegła prawidłowo");
     }
 }

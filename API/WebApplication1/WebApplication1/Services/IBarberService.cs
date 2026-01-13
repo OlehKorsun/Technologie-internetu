@@ -5,9 +5,9 @@ namespace WebApplication1.Services;
 
 public interface IBarberService
 {
-    Task<IEnumerable<BarberDto>> GetBarbersAsync();
-    Task<BarberDetailedDto> GetBarberAsync(int barberId);
-    Task CreateBarberAsync(BarberRequest barberRequest);
-    Task UpdateBarberAsync(int barberId, BarberRequest barberRequest);
-    Task DeleteBarberAsync(int barberId);
+    Task<PagedRecords<BarberDto>> GetBarbersAsync(int page, int pageSize, CancellationToken ct);
+    Task<BarberDetailedDto> GetBarberAsync(int barberId, CancellationToken ct);
+    Task CreateBarberAsync(BarberRequest barberRequest, CancellationToken ct);
+    Task UpdateBarberAsync(int barberId, BarberRequest barberRequest, CancellationToken ct);
+    Task DeleteBarberAsync(int barberId, CancellationToken ct);
 }

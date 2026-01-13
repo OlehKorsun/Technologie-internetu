@@ -1,37 +1,40 @@
-import {useAuth} from "../auth/AuthContext";
-import {useEffect, useState} from "react";
+import { useAuth } from "../auth/AuthContext";
+import { useEffect, useState } from "react";
+import { apiFetch } from "../api/api";
 
-export default function ProdilePage(){
-    const { token } = useAuth();
+export default function ProfilePage() {
+    const { user } = useAuth();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:5058/api/users/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("Błąd ładowania danych");
-                return res.json();
-            })
+        if (!user?.id) return;
+
+        setLoading(true);
+        setError("");
+
+        apiFetch(`http://localhost:5058/api/clients/user/${user.id}`)
             .then(setData)
-            .catch(err => setError(err.message))
+            .catch(err => {
+                setError(err.message || "Błąd ładowania danych");
+            })
             .finally(() => setLoading(false));
-    }, [token]);
+    }, [user]);
 
     if (loading) return <p>Ładowanie...</p>;
     if (error) return <p>Błąd: {error}</p>;
+    if (!data) return <p>Brak danych użytkownika.</p>;
 
     return (
-        <div>
+        <div className="details-card">
             <h2>Moje dane</h2>
-            <p><b>Imię:</b> {data.firstName}</p>
-            <p><b>Nazwisko:</b> {data.lastName}</p>
-            <p><b>Email:</b> {data.email}</p>
-            <p><b>Telefon:</b> {data.phoneNumber}</p>
+            <div className="card">
+                <p><b>Imię:</b> {data.name}</p>
+                <p><b>Nazwisko:</b> {data.surname}</p>
+                <p><b>Data urodzenia:</b> {data.birthDate}</p>
+                <p><b>Email:</b> {data.email}</p>
+            </div>
         </div>
     );
 }

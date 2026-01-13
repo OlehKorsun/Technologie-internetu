@@ -18,51 +18,61 @@ public class VisitsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetVisits()
+    public async Task<IActionResult> GetVisits(
+        int page = 1,
+        int pageSize = 5,
+        CancellationToken ct = default)
     {
-        var visits = await _visitService.GetAllVisits();
+        var visits = await _visitService.GetAllVisits(page, pageSize, ct);
         return Ok(visits);
     }
 
     [HttpGet("{visitId}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetVisitById([FromRoute]int visitId)
+    public async Task<IActionResult> GetVisitById([FromRoute]int visitId, CancellationToken ct = default)
     {
-        var visit = await _visitService.GetVisit(visitId);
+        var visit = await _visitService.GetVisit(visitId, ct);
+        return Ok(visit);
+    }
+
+    [HttpGet("user/{visitId}/{userId}")]
+    [Authorize(Roles = "user")]
+    public async Task<IActionResult> GetVisitByUserId([FromRoute]int visitId, [FromRoute]int userId, CancellationToken ct = default)
+    {
+        var visit = await _visitService.GetVisitByUserId(visitId, userId, ct);
         return Ok(visit);
     }
 
     [HttpGet("client/{clientId}")]
-    [Authorize(Roles = "admin,client")]
-    public async Task<IActionResult> GetVisitByClientId([FromRoute]int clientId)
+    [Authorize(Roles = "admin,user")]
+    public async Task<IActionResult> GetVisitsByClientId([FromRoute]int clientId, CancellationToken ct = default)
     {
-        var visits = await _visitService.GetVisitsByClientId(clientId);
+        var visits = await _visitService.GetVisitsByClientId(clientId, ct);
         return Ok(visits);
     }
 
     [HttpGet("barber/{barberId}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> GetVisitsByBarberId([FromRoute]int barberId)
+    public async Task<IActionResult> GetVisitsByBarberId([FromRoute]int barberId, CancellationToken ct = default)
     {
-        var visits = await _visitService.GetVisitsByBarberId(barberId);
+        var visits = await _visitService.GetVisitsByBarberId(barberId, ct);
         return Ok(visits);
     }
 
 
     [Authorize(Roles = "admin,user")]
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetVisitsByUserId([FromRoute] int userId)
+    public async Task<IActionResult> GetVisitsByUserId([FromRoute] int userId, CancellationToken ct = default)
     {
-        var visits = await _visitService.GetVisitsByUserId(userId);
+        var visits = await _visitService.GetVisitsByUserId(userId, ct);
         return Ok(visits);
     }
 
     [HttpPost]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> CreateVisit([FromBody]VisitRequest visitRequest)
+    public async Task<IActionResult> CreateVisit([FromBody]VisitRequest visitRequest, CancellationToken ct = default)
     {
-        var visit = await _visitService.CreateVisit(visitRequest);
-        // return Created();
+        var visit = await _visitService.CreateVisit(visitRequest, ct);
         return CreatedAtAction(
             nameof(GetVisitById),
             new {visitId = visit.VisitId},
@@ -72,18 +82,18 @@ public class VisitsController : ControllerBase
     }
 
     [HttpPut("{visitId}")]
-    [Authorize(Roles = "admin,client")]
-    public async Task<IActionResult> UpdateVisit([FromRoute]int visitId, [FromBody]VisitRequest visitRequest)
+    [Authorize(Roles = "admin,user")]
+    public async Task<IActionResult> UpdateVisit([FromRoute]int visitId, [FromBody]VisitRequest visitRequest, CancellationToken ct = default)
     {
-        await _visitService.UpdateVisit(visitId, visitRequest);
+        await _visitService.UpdateVisit(visitId, visitRequest, ct);
         return NoContent();
     }
 
     [HttpDelete("{visitId}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> DeleteVisit([FromRoute]int visitId)
+    public async Task<IActionResult> DeleteVisit([FromRoute]int visitId, CancellationToken ct = default)
     {
-        await _visitService.DeleteVisit(visitId);
+        await _visitService.DeleteVisit(visitId, ct);
         return NoContent();
     }
 }

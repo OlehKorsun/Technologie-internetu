@@ -6,12 +6,13 @@ namespace WebApplication1.Services;
 
 public interface IVisitService
 {
-    Task<IEnumerable<VisitDto>> GetAllVisits();
-    Task<VisitDetailedDto> GetVisit(int visitId);
-    Task<IEnumerable<VisitDto>> GetVisitsByClientId(int clientId);
-    Task<IEnumerable<VisitDto>> GetVisitsByBarberId(int barberId);
-    Task<VisitDto> CreateVisit(VisitRequest visitRequest);
-    Task UpdateVisit(int visitId, VisitRequest visitRequest);
-    Task DeleteVisit(int visitId);
-    Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId);
+    Task<PagedRecords<VisitDto>> GetAllVisits(int page, int pageSize, CancellationToken ct);
+    Task<VisitDetailedDto> GetVisit(int visitId, CancellationToken ct);
+    Task<IEnumerable<VisitDto>> GetVisitsByClientId(int clientId, CancellationToken ct);
+    Task<IEnumerable<VisitDto>> GetVisitsByBarberId(int barberId, CancellationToken ct);
+    Task<VisitDto> CreateVisit(VisitRequest visitRequest, CancellationToken ct);
+    Task UpdateVisit(int visitId, VisitRequest visitRequest, CancellationToken ct);
+    Task DeleteVisit(int visitId, CancellationToken ct);
+    Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId, CancellationToken ct);
+    Task<VisitDetailedDto> GetVisitByUserId(int visitId, int clientId, CancellationToken ct);
 }

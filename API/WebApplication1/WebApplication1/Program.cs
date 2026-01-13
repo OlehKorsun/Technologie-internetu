@@ -9,6 +9,17 @@ using WebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -77,6 +88,8 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+app.UseCors("ReactPolicy");
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 

@@ -1,60 +1,49 @@
 import React, { useEffect, useState } from "react";
-import VisitList from "../components/VisitList";
 import { apiFetch } from "../api/api";
-import { useAuth } from "../auth/AuthContext";
+import ClientList from "../components/ClientList";
 
-export default function VisitsPage() {
-    const { user } = useAuth();
-    const [visits, setVisits] = useState([]);
-    const [loading, setLoading] = useState(true);
+export default function ClientsPage() {
+    const [clients, setClients] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
 
-    console.log("Rola zalogowanego użytkownika:", user?.role);
+    const pageSize = 5;
 
-
-    useEffect(() => {
-        if (!user) return;
-        console.log('userid: ', user?.id);
-        const userId = user.id;
-        const url =
-            user.role === "admin"
-                ? `http://localhost:5058/api/visits`
-                : `http://localhost:5058/api/visits/user/${userId}`;
-
-        apiFetch(url)
-            .then(data => {
-                setVisits(Array.isArray(data) ? data : []);
-            })
-            .catch(err => {
-                console.error(err);
-                setVisits([]);
-            })
-            .finally(() => setLoading(false));
-    }, [user]);
-
-
-    const deleteVisit = async (id) => {
-        if (!window.confirm("Czy na pewno usunąć wizytę?")) return;
-
+    const loadClients = async (pageNumber = 1) => {
+        setLoading(true);
         try {
-            const res = await apiFetch(`http://localhost:5058/api/visits/${id}`, {
-                method: "DELETE",
-            });
-
-            if (!res.ok) {
-                const msg = await res.text();
-                alert(msg);
-                return;
-            }
-
-            setVisits((prev) => prev.filter((v) => v.visitId !== id));
+            const data = await apiFetch(`http://localhost:5058/api/clients?page=${pageNumber}&pageSize=${pageSize}`);
+            setClients(data.records);
+            setTotalPages(data.totalPages);
         } catch (err) {
-            alert("Błąd przy usuwaniu wizyty!");
+            console.error(err);
+            setClients([]);
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (loading) return <p>Ładowanie...</p>;
-    if (!Array.isArray(visits) || visits.length === 0)
-        return <p>Brak wizyt do wyświetlenia</p>;
+    useEffect(() => {
+        loadClients(page);
+    }, [page]);
 
-    return <VisitList visits={visits} onDelete={deleteVisit} />;
+    const deleteClient = async (id) => {
+        if (!window.confirm("Czy na pewno usunąć klienta?")) return;
+
+        await apiFetch(`http://localhost:5058/api/clients/${id}`, { method: "DELETE" });
+
+        loadClients(page);
+    };
+
+    return (
+        <ClientList
+            clients={clients}
+            onDelete={deleteClient}
+            page={page}
+            setPage={setPage}
+            totalPages={totalPages}
+            loading={loading}
+        />
+    );
 }
