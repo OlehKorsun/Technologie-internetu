@@ -13,11 +13,13 @@ namespace WebApplication1.Services;
 public class AuthService : IAuthServise
 {
     private readonly IUserRepository _userRepository;
+    private readonly IClientRepository _clientRepository;
     private readonly IConfiguration _configuration;
 
-    public AuthService(IUserRepository userRepository, IConfiguration configuration)
+    public AuthService(IUserRepository userRepository, IClientRepository clientRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
+        _clientRepository = clientRepository;
         _configuration = configuration;
     }
     
@@ -68,7 +70,18 @@ public class AuthService : IAuthServise
             IdRola = roleId,
         };
         
+        Console.WriteLine(request.BirthDate);
+
+        var client = new Client
+        {
+            Name = request.Name,
+            Surname = request.Surname,
+            BirthDate = request.BirthDate,
+            User = user,
+        };
+        
         await _userRepository.AddUserAsync(user, ct);
+        await _clientRepository.AddClientAsync(client, ct);
     }
     
     

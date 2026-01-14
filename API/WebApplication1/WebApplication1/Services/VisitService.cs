@@ -115,10 +115,10 @@ public class VisitService : IVisitService
         });
     }
 
-    public async Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId, CancellationToken ct)
+    public async Task<PagedRecords<VisitDto>> GetVisitsByUserId(int userId, int page, int pageSize, CancellationToken ct)
     {
-        var visits = await _visitRepository.GetVisitsByUserId(userId, ct);
-        return visits.Select(v => new VisitDto()
+        var visits = await _visitRepository.GetVisitsByUserId(userId, page, pageSize, ct);
+        var a = visits.Select(v => new VisitDto()
         {
             VisitId = v.VisitId,
             BarberName = v.Barber.Name,
@@ -127,6 +127,16 @@ public class VisitService : IVisitService
             End = v.End,
             Price = v.Price
         });
+
+        var count = await _visitRepository.GetVisitCountByUserIdAsync(userId, ct);
+
+        return new PagedRecords<VisitDto>
+        {
+            Records = a,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = count
+        };
     }
 
     public async Task<VisitDto> CreateVisit(VisitRequest visitRequest, CancellationToken ct)

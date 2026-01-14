@@ -19,7 +19,8 @@ public interface IVisitRepository
         DateTime end,
         CancellationToken ct,
         int? excludedVisitId = null);
-    Task<IEnumerable<Visit>> GetVisitsByUserId(int clientId, CancellationToken ct);
+    Task<IEnumerable<Visit>> GetVisitsByUserId(int clientId, int page, int pageSize, CancellationToken ct);
     Task<Visit?> GetVisitByUserIdAsync (int visitId, int userId, CancellationToken ct);
     Task<int> GetVisitCountAsync(CancellationToken ct);
+    Task<int> GetVisitCountByUserIdAsync(int userId, CancellationToken ct);
 }

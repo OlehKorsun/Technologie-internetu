@@ -55,12 +55,15 @@ public class VisitRepository : IVisitRepository
         return visits;
     }
 
-    public async Task<IEnumerable<Visit>> GetVisitsByUserId(int userId, CancellationToken ct)
+    public async Task<IEnumerable<Visit>> GetVisitsByUserId(int userId, int page, int pageSize, CancellationToken ct)
     {
         var visits = await _context.Visits
             .Include(c => c.Client)
             .Include(b => b.Barber)
             .Where(v => v.Client.UserId == userId)
+            .OrderBy(v => v.VisitId)
+            .Skip((page-1)*pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
         return visits;
     }
@@ -112,6 +115,14 @@ public class VisitRepository : IVisitRepository
     public async Task<int> GetVisitCountAsync(CancellationToken ct)
     {
         var count = await _context.Visits.CountAsync(ct);
+        return count;
+    }
+
+    public async Task<int> GetVisitCountByUserIdAsync(int userId, CancellationToken ct)
+    {
+        var count = await _context.Visits
+            .Where(v => v.Client.UserId == userId)
+            .CountAsync(ct);
         return count;
     }
 }

@@ -62,14 +62,18 @@ public class VisitsController : ControllerBase
 
     [Authorize(Roles = "admin,user")]
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetVisitsByUserId([FromRoute] int userId, CancellationToken ct = default)
+    public async Task<IActionResult> GetVisitsByUserId(
+        [FromRoute] int userId, 
+        int page = 1, 
+        int pageSize = 5, 
+        CancellationToken ct = default)
     {
-        var visits = await _visitService.GetVisitsByUserId(userId, ct);
+        var visits = await _visitService.GetVisitsByUserId(userId, page, pageSize, ct);
         return Ok(visits);
     }
 
     [HttpPost]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> CreateVisit([FromBody]VisitRequest visitRequest, CancellationToken ct = default)
     {
         var visit = await _visitService.CreateVisit(visitRequest, ct);
@@ -90,7 +94,7 @@ public class VisitsController : ControllerBase
     }
 
     [HttpDelete("{visitId}")]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin,user")]
     public async Task<IActionResult> DeleteVisit([FromRoute]int visitId, CancellationToken ct = default)
     {
         await _visitService.DeleteVisit(visitId, ct);

@@ -30,22 +30,30 @@ function App() {
                 <Route path="/register" element={<RegisterPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/about" element={<About/>}/>
+
                 <Route path="/clients" element={
                     <PrivateRoute roles={["admin"]}>
                         <ClientsPage/>
                     </PrivateRoute>
                 }/>
+
                 <Route path="/barbers" element={
                     <PrivateRoute roles={["admin"]}>
                         <BarbersPage/>
                     </PrivateRoute>
                 }/>
+
                 <Route path="/visits" element={
                     <PrivateRoute roles={["admin", "user"]}>
                         <VisitsPage/>
                     </PrivateRoute>}/>
 
-                <Route path="/client/:id" element={<ClientDetails/>}/>
+                <Route path="/client/:id" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <ClientDetails/>
+                    </PrivateRoute>
+                }/>
+
                 <Route path="/barber/:id" element={
                     <PrivateRoute roles={["admin"]}>
                         <BarberDetails/>
@@ -57,20 +65,39 @@ function App() {
                     </PrivateRoute>
                 }/>
 
-                <Route path="/client/add" element={<ClientForm/>}/>
-                <Route path="/client/edit/:id" element={<ClientForm/>}/>
+                <Route path="/client/add" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <ClientForm/>
+                    </PrivateRoute>
+                }/>
+
+                <Route path="/client/edit/:id" element={
+                    <PrivateRoute roles={["admin"]}>
+                        <ClientForm/>
+                    </PrivateRoute>
+                }/>
 
                 <Route path="/barber/add" element={
                     <PrivateRoute roles={["admin"]}>
                         <BarberForm/>
                     </PrivateRoute>}/>
+
                 <Route path="/barber/edit/:id" element={
                     <PrivateRoute roles={["admin"]}>
                         <BarberForm/>
                     </PrivateRoute>}/>
 
-                <Route path="/visit/add" element={<VisitForm/>}/>
-                <Route path="/visit/edit/:id" element={<VisitForm/>}/>
+                <Route path="/visit/add" element={
+                    <PrivateRoute roles={["admin", "user"]}>
+                        <VisitForm/>
+                    </PrivateRoute>
+                }/>
+
+                <Route path="/visit/edit/:id" element={
+                    <PrivateRoute roles={["admin", "user"]}>
+                        <VisitForm/>
+                    </PrivateRoute>
+                }/>
 
                 <Route path="/profile" element={
                     <PrivateRoute roles={["user"]}>

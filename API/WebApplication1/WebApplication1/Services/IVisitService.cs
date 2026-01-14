@@ -13,6 +13,6 @@ public interface IVisitService
     Task<VisitDto> CreateVisit(VisitRequest visitRequest, CancellationToken ct);
     Task UpdateVisit(int visitId, VisitRequest visitRequest, CancellationToken ct);
     Task DeleteVisit(int visitId, CancellationToken ct);
-    Task<IEnumerable<VisitDto>> GetVisitsByUserId(int userId, CancellationToken ct);
+    Task<PagedRecords<VisitDto>> GetVisitsByUserId(int userId, int page, int pageSize, CancellationToken ct);
     Task<VisitDetailedDto> GetVisitByUserId(int visitId, int clientId, CancellationToken ct);
 }
